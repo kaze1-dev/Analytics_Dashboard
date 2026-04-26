@@ -1,7 +1,7 @@
-import Bar from "../../components/graphs/bar";
-import Cards from "../../components/cards";
-import Donut from "../../components/graphs/donut";
-import OrdersTable from "../../components/recentOrders";
+import Bar from "../../../components/graphs/bar";
+import Cards from "../../../components/cards";
+import Donut from "../../../components/graphs/donut";
+import OrdersTable from "../../../components/recentOrders";
 
 export default function Home() {
    return (
