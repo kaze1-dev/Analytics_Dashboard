@@ -1,8 +1,18 @@
+"use client"
 import React from 'react'
 import { ArrowDown, ArrowUp, Box, Package2, ScrollText, UsersRound } from 'lucide-react'
-
+import { useQuery } from '@tanstack/react-query'
 
 const Cards = () => {
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["revenue"],
+    queryFn: () => fetch("/api/cards/revenue").then((res) => res.json())
+  })
+
+  const rawRevenue = data?.data
+  const formattedRevenue = Math.round(rawRevenue)
+  const final = formattedRevenue.toLocaleString()
   return (
     <div className='grid grid-cols-4 gap-4 cursor-default mb-4'>
       <div className='border border-neutral-800 rounded-xl border-solid p-4 hover:border-neutral-700 transition'>
@@ -21,17 +31,20 @@ const Cards = () => {
           </div>
 
         </div>
-        <div className='flex gap-4 items-center'>
+        <div className='flex gap-4 flex-col'>
           <h1 className='text-2xl font-bold text-neutral-300'>
-            $145,000
+            ${final}
           </h1>
-          <div className='flex bg-blue-500/10 transition rounded-lg px-3 py-0.5 items-center gap-1'>
-            <div className=''>
-              <ArrowUp className='w-4 text-blue-600  font-bold' />
+          <div className='flex '>
+            <div className='bg-blue-500/10 flex transition rounded-lg px-3 py-0.5 items-center gap-1'>
+              <div className=' '>
+                <ArrowUp className='w-4 text-blue-600  font-bold' />
+              </div>
+              <div className='text-xs text-blue-600 font-sans font-bold'>
+                10%
+              </div>
             </div>
-            <div className='text-xs text-blue-600 font-sans font-bold'>
-              10%
-            </div>
+
           </div>
         </div>
 
@@ -51,23 +64,26 @@ const Cards = () => {
             </div>
             <div>
               <h4 className='text-neutral-400 font-bold'>
-                Orders
+                Total Orders
               </h4>
             </div>
           </div>
 
         </div>
-        <div className='flex gap-4 items-center'>
-          <h1 className='text-2xl font-bold text-neutral-300'>
+        <div className='flex flex-col gap-4 '>
+          <h1 className='text-3xl font-bold text-neutral-300'>
             1,235
           </h1>
-          <div className='flex bg-blue-500/10 transition rounded-lg px-3 py-0.5 items-center gap-1'>
-            <div className=''>
-              <ArrowUp className='w-4 text-blue-600  font-bold' />
+          <div className='flex  '>
+            <div className='flex bg-blue-500/10 transition rounded-lg px-3 py-0.5 items-center gap-1'>
+              <div className=''>
+                <ArrowUp className='w-4 text-blue-600  font-bold' />
+              </div>
+              <div className='text-xs text-blue-600 font-sans font-bold'>
+                10%
+              </div>
             </div>
-            <div className='text-xs text-blue-600 font-sans font-bold'>
-              10%
-            </div>
+
           </div>
         </div>
 
@@ -93,17 +109,20 @@ const Cards = () => {
           </div>
 
         </div>
-        <div className='flex gap-4 items-center'>
-          <h1 className='text-2xl font-bold text-neutral-300'>
+        <div className='flex flex-col gap-4'>
+          <h1 className='text-3xl font-bold text-neutral-300'>
             762
           </h1>
-          <div className='flex bg-blue-500/10 transition rounded-lg px-3 py-0.5 items-center gap-1'>
-            <div className=''>
-              <ArrowUp className='w-4 text-blue-600  font-bold' />
+          <div className='flex'>
+            <div className='flex bg-blue-500/10 transition rounded-lg px-3 py-0.5 items-center gap-1'>
+              <div className=''>
+                <ArrowUp className='w-4 text-blue-600  font-bold' />
+              </div>
+              <div className='text-xs text-blue-600 font-sans font-bold'>
+                9.5%
+              </div>
             </div>
-            <div className='text-xs text-blue-600 font-sans font-bold'>
-              9.5%
-            </div>
+
           </div>
         </div>
 
@@ -129,17 +148,20 @@ const Cards = () => {
           </div>
 
         </div>
-        <div className='flex gap-4 items-center'>
+        <div className='flex flex-col gap-4'>
           <h1 className='text-2xl font-bold text-neutral-300'>
             543
           </h1>
-          <div className='flex bg-red-500/10  transition rounded-lg px-3 py-0.5 items-center gap-1'>
-            <div className=''>
-              <ArrowDown className='w-4 text-red-600  font-bold' />
+         <div className='flex'>
+            <div className='flex bg-red-500/10 transition rounded-lg px-3 py-0.5 items-center gap-1'>
+              <div className=''>
+                <ArrowDown className='w-4 text-red-600  font-bold' />
+              </div>
+              <div className='text-xs text-red-600 font-sans font-bold'>
+                9.5%
+              </div>
             </div>
-            <div className='text-xs text-red-600 font-sans font-bold'>
-              3.9%
-            </div>
+
           </div>
         </div>
 
