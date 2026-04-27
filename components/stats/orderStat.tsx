@@ -1,7 +1,12 @@
 import { ArrowUp, Package2 } from 'lucide-react'
 import React from 'react'
+import useOrder from '@/hooks/useOrder'
 
 const OrderStat = () => {
+
+  const {data, isLoading, error} = useOrder();
+  const orders = data?.toLocaleString()
+
   return (
     <div className='border border-neutral-800 rounded-xl border-solid hover:border-neutral-700 transition p-4'>
 
@@ -20,7 +25,7 @@ const OrderStat = () => {
         </div>
         <div className='flex flex-col gap-4 '>
           <h1 className='text-3xl font-bold text-neutral-300'>
-            1,235
+            {orders}
           </h1>
           <div className='flex  '>
             <div className='flex bg-blue-500/10 transition rounded-lg px-3 py-0.5 items-center gap-1'>

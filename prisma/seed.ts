@@ -7,7 +7,7 @@ async function main() {
   // 2. CUSTOMERS (100)
   // ---------------------------
   await prisma.customer.createMany({
-    data: Array.from({ length: 100 }).map(() => ({
+    data: Array.from({ length: 557 }).map(() => ({
       name: faker.person.fullName(),
       email: faker.internet.email(),
       phone: faker.phone.number(),
@@ -23,7 +23,7 @@ async function main() {
   // 3. PRODUCTS (200)
   // ---------------------------
   await prisma.product.createMany({
-    data: Array.from({ length: 200 }).map(() => ({
+    data: Array.from({ length: 453 }).map(() => ({
       name: faker.commerce.productName(),
       price: parseFloat(faker.commerce.price({ min: 10, max: 500 })),
       stock: faker.number.int({ min: 10, max: 200 }),
@@ -39,9 +39,9 @@ async function main() {
   // ---------------------------
   console.log("📦 Creating orders...")
 
-  for (let i = 0; i < 500; i++) {
+  for (let i = 0; i < 643; i++) {
     if (i % 25 === 0) {
-      console.log(`📦 Progress: ${i}/500 orders`)
+      console.log(`📦 Progress: ${i}/643 orders`)
     }
 
     const customer = faker.helpers.arrayElement(customers)
