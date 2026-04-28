@@ -3,7 +3,7 @@ import React from 'react'
 import RevenueStat from './stats/revenueStat'
 import OrderStat from './stats/orderStat'
 import CustomerStat from './stats/customerStat'
-import ProductStat from './stats/productstat'
+import ProductStat from './stats/productStat'
 
 
 const Cards = () => {

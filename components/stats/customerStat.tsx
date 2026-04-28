@@ -1,7 +1,9 @@
 import { ArrowUp, UsersRound } from 'lucide-react'
 import React from 'react'
+import useCustomer from '@/hooks/useCustomer'
 
 const CustomerStat = () => {
+  const {data, isLoading, error} = useCustomer();
   return (
     <div className='border border-neutral-800 rounded-xl border-solid hover:border-neutral-700 transition p-4'>
 
@@ -20,7 +22,7 @@ const CustomerStat = () => {
         </div>
         <div className='flex flex-col gap-4'>
           <h1 className='text-3xl font-bold text-neutral-300'>
-            762
+            {data}
           </h1>
           <div className='flex'>
             <div className='flex bg-blue-500/10 transition rounded-lg px-3 py-0.5 items-center gap-1'>

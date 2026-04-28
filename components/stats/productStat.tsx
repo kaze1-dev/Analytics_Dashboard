@@ -1,7 +1,9 @@
 import { ArrowDown, Box } from 'lucide-react'
 import React from 'react'
+import useProduct from '@/hooks/useProduct'
 
 const ProductStat = () => {
+  const {data, isLoading, error} = useProduct()
   return (
     <div className='border border-neutral-800 rounded-xl border-solid hover:border-neutral-700 transition p-4'>
 
@@ -20,7 +22,7 @@ const ProductStat = () => {
         </div>
         <div className='flex flex-col gap-4'>
           <h1 className='text-2xl font-bold text-neutral-300'>
-            543
+            {data?.toLocaleString()}
           </h1>
           <div className='flex'>
             <div className='flex bg-red-500/10 transition rounded-lg px-3 py-0.5 items-center gap-1'>
