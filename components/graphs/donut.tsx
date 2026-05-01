@@ -19,7 +19,7 @@ const Donut = () => {
    const total = data.reduce((sum, item) => sum + item.value, 0)
    return (
       <div className="w-full">
-         <div className="border border-neutral-800 rounded-xl hover:border-neutral-700 transition-all p-2">
+         <div className="border border-neutral-800 rounded-3xl hover:border-neutral-700 transition-all p-5">
             <h2 className="text-neutral-400 text-lg font-bold mb-4">
                Orders Information
             </h2>

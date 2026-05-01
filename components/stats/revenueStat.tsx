@@ -1,12 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import useRevenue from '@/hooks/useRevenue';
 import { ArrowUp, ScrollText } from 'lucide-react';
+import useStats from '@/hooks/useStats';
 
 const RevenueStat = () => {
-  const { data, isLoading, error } = useRevenue();
-  const formatted = data?.toLocaleString("en-US", {
+  const [frame, setFrame] = useState("1w");
+  const { data, isLoading, error } = useStats(frame);
+  console.log(data)
+  const totalRevenue = data?.totalRevenue
+  const formatted = totalRevenue?.toLocaleString("en-US", {
     style: "currency",
-    currency: "USD"
+    currency: "USD",
+    maximumFractionDigits: 0,
+    minimumFractionDigits: 0,
   })
   return (
     <>
@@ -52,9 +58,7 @@ const RevenueStat = () => {
               </div>
             </div>
 
-            <h5 className='text-xs text-neutral-400 mt-4'>
-              From last week
-            </h5>
+
 
 
           </div>

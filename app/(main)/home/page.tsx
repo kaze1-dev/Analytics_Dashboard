@@ -2,6 +2,7 @@ import Bar from "../../../components/graphs/bar";
 import Cards from "../../../components/cards";
 import Donut from "../../../components/graphs/donut";
 import OrdersTable from "../../../components/recentOrders";
+import SalesChart from "@/components/graphs/area";
 
 export default function Home() {
    return (
@@ -21,7 +22,7 @@ export default function Home() {
             </h1>
             <div className="grid grid-cols-2 gap-4 mt-4">
                <div>
-                  <Bar />
+                  <SalesChart />
                </div>
                <div>
                   <Donut />

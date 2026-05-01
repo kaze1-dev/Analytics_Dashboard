@@ -13,54 +13,107 @@ datasource db {
 }
 
 model User {
-  id        String        @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String
-  email     String        @unique
+  email     String   @unique
   password  String?
-  createdAt DateTime      @default(now())
-
+  createdAt DateTime @default(now())
 }
 
 model Customer {
-  id          String          @id @default(cuid())
-  name        String    
-  email       String          @unique
-  phone       String?
-  address     String?
-  orders      Order[]
-  createdAt   DateTime        @default(now())
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  address   String?
+  orders    Order[]
+  createdAt DateTime @default(now())
 }
 
 model Product {
-  id          String          @id @default(cuid())
-  name        String    
-  price       Float
-  stock       Int 
-  items       OrderItem[]
-  createdAt   DateTime        @default(now())
+  id        String      @id @default(cuid())
+  name      String
+  price     Float
+  stock     Int
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
 }
 
 model Order {
-  id          String          @id @default(cuid())
+  id          String      @id @default(cuid())
   customerId  String
-  customer    Customer        @relation(fields: [customerId], references: [id])
+  customer    Customer    @relation(fields: [customerId], references: [id])
   totalAmount Float
   status      String
   items       OrderItem[]
-  createdAt   DateTime        @default(now()) 
+  createdAt   DateTime    @default(now())
+
   @@index([customerId])
 }
 
 model OrderItem {
-  id          String          @id @default(cuid())
-  orderId     String
-  productId   String
-  quantity    Int
-  price       Float
-  order       Order           @relation(fields: [orderId], references: [id])
-  product     Product         @relation(fields: [productId], references: [id])
+  id        String  @id @default(cuid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Float
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+
   @@index([orderId])
   @@index([productId])
 }
+/* 
+// app/api/analytics/sales/route.ts
+import prisma from "@/lib/prisma";
+import { NextResponse } from "next/server";
+import { subDays, startOfDay, format } from "date-fns";
 
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const range = searchParams.get("range") || "7d"; // Default to 7 days
 
+  let startDate: Date;
+  
+  // 1. Determine the start date based on the range
+  switch (range) {
+    case "24h": startDate = subDays(new Date(), 1); break;
+    case "7d":  startDate = subDays(new Date(), 7); break;
+    case "30d": startDate = subDays(new Date(), 30); break;
+    case "1y":  startDate = subDays(new Date(), 365); break;
+    default:    startDate = subDays(new Date(), 7);
+  }
+
+  // 2. Fetch only the necessary data
+  const orders = await prisma.order.findMany({
+    where: {
+      createdAt: { gte: startDate },
+      status: { not: "cancelled" }, // Don't show failed sales in revenue charts
+    },
+    select: {
+      totalAmount: true,
+      createdAt: true,
+    },
+    orderBy: { createdAt: "asc" },
+  });
+
+  // 3. Group the data (Simplest way: group by Date string)
+  const chartDataMap: Record<string, number> = {};
+
+  orders.forEach((order) => {
+    // If range is 1y, group by Month. Otherwise, group by Day.
+    const pattern = range === "1y" ? "MMM yyyy" : "MMM dd";
+    const label = format(order.createdAt, pattern);
+    
+    chartDataMap[label] = (chartDataMap[label] || 0) + order.totalAmount;
+  });
+
+  // Convert map to Array for the Chart component
+  const finalData = Object.entries(chartDataMap).map(([label, total]) => ({
+    label,
+    total,
+  }));
+
+  return NextResponse.json(finalData);
+}
+ */
