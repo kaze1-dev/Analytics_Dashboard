@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+/* import { useQuery } from "@tanstack/react-query";
 
 const useOrder = () => {
   return useQuery({
@@ -12,4 +12,4 @@ const useOrder = () => {
   })
 }
 
-export default useOrder
+export default useOrder */

@@ -36,10 +36,10 @@ const SalesChart = () => {
     { label: "1Y", value: "1y" },
   ];
   return (
-    <div className="w-full h-88 bg-neutral-950/40 border border-neutral-800 px-6 pb-12 pt-8 rounded-3xl backdrop-blur-sm">
+    <div className="w-full h-93 bg-neutral-950/40 border border-neutral-800 px-6 pb-12 pt-8 rounded-3xl backdrop-blur-sm">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h3 className="text-neutral-100 font-bold text-xl tracking-tight">Revenue Analytics</h3>
+          <h3 className="text-neutral-200 font-bold text-xl tracking-tight">Revenue Analytics</h3>
           <p className="text-neutral-500 text-sm">Performance metrics for the selected period</p>
         </div>
         
@@ -57,10 +57,10 @@ const SalesChart = () => {
             <button
               key={option.value}
               onClick={() => setRange(option.value)}
-              className={`text-sm px-3 py-1 cursor-pointer font-semibold rounded-lg transition-all ${
+              className={`text-xs px-3 py-1 cursor-pointer font-bold rounded-lg transition-all ${
                 range === option.value
-                  ? "bg-indigo-500 text-neutral-400 shadow-lg"
-                  : "bg-neutral-950 text-neutral-400"}`}
+                  ? "bg-indigo-500 text-neutral-200"
+                  : "bg-neutral-950 text-neutral-200"}`}
             >
               {option.label}
             </button>

@@ -16,7 +16,8 @@ const getStats = async (timeframe: string) => {
     prisma.order.aggregate({
       _sum: { totalAmount: true},
       where: {
-        createdAt: { gte: startDate}
+        createdAt: { gte: startDate},
+        status: "delivered"
       }
     }),
     prisma.customer.count({

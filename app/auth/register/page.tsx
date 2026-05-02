@@ -41,7 +41,7 @@ const RegisterPage = () => {
         email: form.email,
         password: form.password,
         redirect: true,
-        callbackUrl: "/"
+        callbackUrl: "/home"
       })
     } else {
       console.log(data.error)

@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
-import useRevenue from '@/hooks/useRevenue';
 import { ArrowUp, ScrollText } from 'lucide-react';
 import useStats from '@/hooks/useStats';
 
-const RevenueStat = () => {
-  const [frame, setFrame] = useState("1w");
+const RevenueStat = (props:any) => {
+/*   const [frame, setFrame] = useState("1w");
   const { data, isLoading, error } = useStats(frame);
   console.log(data)
   const totalRevenue = data?.totalRevenue
@@ -13,14 +12,14 @@ const RevenueStat = () => {
     currency: "USD",
     maximumFractionDigits: 0,
     minimumFractionDigits: 0,
-  })
+  }) */
   return (
     <>
       {
-        isLoading ?
+        props.loading ?
           <>
 
-            <div className='bg-neutral-900 w-full h-50 rounded-lg animate-pulse'>
+            <div className='bg-neutral-900 w-full h-33 rounded-lg animate-pulse'>
 
             </div>
           </>
@@ -31,10 +30,10 @@ const RevenueStat = () => {
               <div className='flex items-center gap-4'>
 
                 <div className='rounded-lg flex items-center justify-center p-1 bg-neutral-900'>
-                  <ScrollText className='text-blue-600' />
+                  <ScrollText className='text-indigo-500' />
                 </div>
                 <div>
-                  <h4 className='text-neutral-400 font-bold'>
+                  <h4 className='text-neutral-200 font-bold'>
                     Total Revenue
                   </h4>
                 </div>
@@ -42,10 +41,10 @@ const RevenueStat = () => {
             </div>
             <div className='flex gap-4 flex-col'>
               <h1 className='text-2xl font-bold text-neutral-300'>
-                {formatted}
+                {props.value}
               </h1>
               <div className='flex '>
-                <div className='bg-blue-500/10 flex transition rounded-lg px-3 py-0.5 items-center gap-1'>
+              {/*   <div className='bg-blue-500/10 flex transition rounded-lg px-3 py-0.5 items-center gap-1'>
                   <div className=' '>
 
                     <ArrowUp className='w-4 text-blue-600  font-bold' />
@@ -53,7 +52,7 @@ const RevenueStat = () => {
                   <div className='text-xs text-blue-600 font-sans font-bold'>
                     10%
                   </div>
-                </div>
+                </div> */}
 
               </div>
             </div>

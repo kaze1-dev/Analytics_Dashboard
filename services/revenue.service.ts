@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 
-const getTotalRevenue = async () => {
+ const getTotalRevenue = async () => {
   const aggregation = await prisma.order.aggregate({
     _sum: {
       totalAmount: true
@@ -13,4 +13,5 @@ const getTotalRevenue = async () => {
   return aggregation._sum.totalAmount ?? 0;
 }
 
-export default getTotalRevenue
+export default getTotalRevenue 
+

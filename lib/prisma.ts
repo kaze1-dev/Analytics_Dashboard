@@ -8,7 +8,6 @@ declare global {
 }
 
 const pool = new pg.Pool({connectionString: process.env.DATABASE_URL,
-  connectionTimeoutMillis: 5000
 })
 
 console.log("connecting to database: ", process.env.DATABASE_URL);

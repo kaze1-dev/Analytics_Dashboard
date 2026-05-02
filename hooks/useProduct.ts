@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+/* import { useQuery } from "@tanstack/react-query";
 
 const useProduct = () => {
   return useQuery({
@@ -14,4 +14,4 @@ const useProduct = () => {
   })
 }
 
-export default useProduct;
+export default useProduct; */
