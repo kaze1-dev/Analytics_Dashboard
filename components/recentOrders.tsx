@@ -1,8 +1,9 @@
 "use client";
+import useRecentOrders from '@/hooks/useRecentOrder';
 import { MoveRight } from 'lucide-react';
 import React from 'react'
 
-type Order = {
+/* type Order = {
   id: string
   customer: string
   date: string
@@ -86,18 +87,26 @@ const orders: Order[] = [
     ]
   },
 
-]
+] */
 
 const statusStyles = {
-  Delivered: "bg-green-950/50  text-green-600",
-  Pending: "bg-yellow-950 text-yellow-600",
-  Returned: "bg-red-950 text-red-600"
+  delivered: "bg-green-950/50  text-green-600",
+  pending: "bg-yellow-950 text-yellow-600",
+  cancelled: "bg-red-950 text-red-600",
+  shipped: "bg-indigo-500/10 text-indigo-500"
 }
 
 const OrdersTable = () => {
+  const { data: orders, isLoading, error } = useRecentOrders()
+  console.log(orders)
   return (
+
     <div className=''>
-      <div className=' bg-neutral-950 border border-neutral-800 hover:border-neutral-700 transition-all rounded-2xl p-5 h-90 overflow-auto no-scrollbar'>
+      {
+        isLoading
+          ? (<div className='h-90 p-5 w-full rounded-2xl bg-neutral-900 animate-pulse transition-all' />)
+          : (
+          <div className=' bg-neutral-950 border border-neutral-800 hover:border-neutral-700 transition-all rounded-2xl p-5 h-90 overflow-auto no-scrollbar'>
         <h1 className='text-xl font-semibold mb-4 text-neutral-400'>
           Recent Orders
         </h1>
@@ -107,35 +116,39 @@ const OrdersTable = () => {
               <tr className='text-neutral-400 text-sm border-b border-neutral-700'>
                 <th className='py-2'>Order ID</th>
                 <th className='py-2'>Customer</th>
-                <th className='py-2'>Item</th>
                 <th className='py-2'>Date</th>
                 <th className='py-2'>Status</th>
                 <th className='py-2'>Amount</th>
               </tr>
             </thead>
             <tbody>
-              {orders.map((order) => (
+              {orders?.map((order: any) => (
                 <tr
                   key={order.id}
                   className='border-b border-neutral-800 last:border-none text-sm hover:bg-neutral-900/40 cursor-pointer rounded'
                 >
-                  <td className='py-6 font-bold text-neutral-400'>{order.id}</td>
-                  <td className='py-6 text-neutral-400 font-bold'>{order.customer}</td>
-                  <td className='py-6 text-neutral-400 font-bold'>
-                    {order.items[0].name}
-                    {order.items.length > 1 && ` +${order.items.length - 1} more`}
+                  <td className='py-6 font-bold text-neutral-400'>
+                    {order.id.slice(-4).toUpperCase()}
                   </td>
-                  <td className='py-6 text-neutral-400 font-bold'>{order.date}</td>
+                  <td className='py-6 text-neutral-400 font-bold'>
+                    {order.customer?.name || "unknown"}
+                  </td>
+                  <td className='py-6 text-neutral-400 font-bold'>
+                    {new Date(order.createdAt).toLocaleString()}
+                  </td>
                   <td className='py-6'>
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${statusStyles[order.status]}`}>
-                      {order.status}
+                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${statusStyles[order.status as keyof typeof statusStyles]}`}>
+                      {order.status.toUpperCase()}
                     </span>
                   </td>
                   <td className='text-neutral-400 font-bold'>
-                    Rs {order.amount.toLocaleString()}
+                    {order.totalAmount.toLocaleString()}
                   </td>
                 </tr>
-              ))}
+              ))
+
+              }
+
             </tbody>
 
           </table>
@@ -147,6 +160,9 @@ const OrdersTable = () => {
           <MoveRight />
         </div>
       </div>
+        )
+      }
+      
     </div>
 
   )
