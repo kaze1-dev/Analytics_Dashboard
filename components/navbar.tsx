@@ -9,6 +9,7 @@ import { HiInformationCircle } from 'react-icons/hi2'
 import { HiUsers } from 'react-icons/hi2'
 import { HiSquare3Stack3D } from 'react-icons/hi2'
 import { useSession } from 'next-auth/react'
+import Link from 'next/link';
 
 const Navbar = () => {
   const {data: session, status} = useSession();
@@ -37,15 +38,18 @@ const Navbar = () => {
               </div>
             </div>
           </div>
-
+          <Link href="/home">
           <div className='bg-neutral-900 px-2 text-medium rounded-xl py-2 text-neutral-400 text-sm flex items-center gap-2 cursor-pointer hover:bg-neutral-900 mb-1'>
             <HiHome size={18} />
             <span className='font-semibold mt-0.5'>Home</span>
           </div>
+          </Link>
+          <Link href="/customer">
           <div className='text-sm flex items-center gap-2 font-semibold px-2 py-2 rounded-xl text-neutral-400 mb-1 cursor-pointer hover:bg-neutral-900 transition'>
             <HiUsers size={18} />
             <span className='mt-0.5'>Customers</span>
           </div>
+          </Link>
           <div className='text-sm flex items-center gap-2 font-semibold px-2 py-2 rounded-xl text-neutral-400 cursor-pointer mb-1 hover:bg-neutral-900 transition'>
 
             <HiShoppingCart size={18} />

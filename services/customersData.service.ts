@@ -1,9 +1,17 @@
-import { metadata } from "@/app/layout";
 import prisma from "@/lib/prisma";
+
+export interface CustomerData {
+  id: string;
+  email: string;
+  name: string;
+  createdAt: Date;
+  orderCount: number;
+  status: "Active" | "Inactive";
+} 
 
 const getCustomerData = async (page: number = 1, pageSize: number = 25) => {
   const skip = (page - 1) * pageSize
-  const [customers, totalCount] = await prisma.$transaction([
+  const [customers, totalCount] = await Promise.all([
     prisma.customer.findMany({
       take: pageSize,
       skip: skip,
@@ -25,7 +33,7 @@ const getCustomerData = async (page: number = 1, pageSize: number = 25) => {
     prisma.customer.count()
   ])
 
-  const data = customers.map(customer => ({
+  const data: CustomerData[] = customers.map(customer => ({
     ...customer,
     orderCount: customer._count.orders,
     status: customer._count.orders > 0 ? "Active" : "Inactive"
