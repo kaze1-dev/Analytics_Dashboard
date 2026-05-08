@@ -30,6 +30,7 @@ const getSpecificCustomer = async (customerId: string) => {
 
   return {
     ...customer,
+    orderCount: customer._count.orders,
     status: customer._count.orders > 0 ? "Active" : "Inactive",
     totalSpent: aggregate._sum.totalAmount || 0
   }
