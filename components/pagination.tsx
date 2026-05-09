@@ -18,9 +18,9 @@ const Pagination = ({ totalPages, currentPage }: Props) => {
 
   return (
     <div className="flex items-center justify-center gap-4 py-4 text-neutral-300 text-sm">
-      <button disabled={currentPage <=1} onClick={() => router.push(createPageUrl(currentPage - 1), {scroll: false})} className="bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-1 text-neutral-200">Previous</button>
-      <span>Page {currentPage} of {totalPages}</span>
-      <button disabled={currentPage >= totalPages} onClick={() => router.push(createPageUrl(currentPage + 1), {scroll: false})} className="bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-1 text-neutral-200">Next</button>
+      <button disabled={currentPage <=1} onClick={() => router.push(createPageUrl(currentPage - 1), {scroll: false})} className="bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-1 text-neutral-300 text-sm font-bold cursor-pointer">Previous</button>
+      <span className="text-xs">Page {currentPage} of {totalPages}</span>
+      <button disabled={currentPage >= totalPages} onClick={() => router.push(createPageUrl(currentPage + 1), {scroll: false})} className="bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-1 text-neutral-300 text-sm font-bold cursor-pointer">Next</button>
     </div>
   )
 }

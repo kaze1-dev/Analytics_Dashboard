@@ -12,7 +12,22 @@ const getSpecificCustomer = async (customerId: string) => {
             orders: true
           }
         },
-      }
+        orders: {
+          include: {
+            items: {
+              include: {
+                product: {
+                  select: {
+                    name: true,
+                    price: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      
     }),
     prisma.order.aggregate({
       where: {
