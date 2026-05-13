@@ -1,5 +1,6 @@
+import useUpdateCustomer from '@/hooks/useCustomerPatch';
 import { format } from 'date-fns';
-import React, { useState } from 'react'
+import React, { InputEvent, ReactEventHandler, SyntheticEvent, useState } from 'react'
 import { HiLocationMarker, HiPencilAlt } from 'react-icons/hi';
 import { HiCheck, HiCheckCircle, HiPencilSquare, HiUserCircle, HiXCircle, HiXMark } from 'react-icons/hi2';
 
@@ -42,6 +43,34 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
   const allItems = customer?.orders.flatMap(order => order.items) || [];
   const totalItemsQuantity = allItems.reduce((sum, item) => sum + item.quantity, 0);
   const [editMode, setEditMode] = useState<boolean>(false)
+  const [formData, setFormData] = useState({
+    name: customer?.name || '',
+    email: customer?.email || '',
+    phone: customer?.phone || '',
+    joinedOn: joinedOn || ''
+  });
+  const { mutate, isPending } = useUpdateCustomer()
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }))
+  };
+  const handleSave = async () => {
+    if (!customer?.id) {
+      console.error("No customer ID found");
+      return;
+    }
+    mutate(
+      { id: customer?.id, data: formData },
+      {
+        onSuccess: () => {
+          setEditMode(false);
+        }
+      }
+    )
+  }
   return (
     <>
       <div onClick={onClose} className='fixed inset-0 bg-black/40 z-40 transition-opacity' />
@@ -116,7 +145,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                   <h4 className='font-bold text-xs text-neutral-400'>Name</h4>
                   {
                     editMode ? (
-                      <input className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" defaultValue={customer?.name} />
+                      <input onChange={handleChange} name='name' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={formData.name} />
                     ) : (
                       <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{customer?.name}</p>
                     )
@@ -127,38 +156,38 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                   <h4 className='font-bold text-xs text-neutral-400'>Email</h4>
                   {
                     editMode ? (
-                      <input className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" defaultValue={customer?.email} />
+                      <input onChange={handleChange} name='email' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={customer?.email} />
                     ) : (
                       <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{customer?.email}</p>
                     )
                   }
-                  
+
                 </div>
                 <div className='mt-6 flex flex-col gap-2'>
                   <h4 className='font-bold text-xs text-neutral-400'>Phone number</h4>
                   {
                     editMode ? (
-                      <input className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" defaultValue={customer?.phone} />
+                      <input onChange={handleChange} name='phone' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={customer?.phone} />
                     ) : (
                       <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{customer?.phone}</p>
                     )
                   }
                 </div>
-                <div className='mt-6 flex flex-col gap-2'>
+                {/* <div className='mt-6 flex flex-col gap-2'>
                   <h4 className='font-bold text-xs text-neutral-400'>Status</h4>
-                  {
+                   {
                     editMode ? (
-                      <input className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" defaultValue={customer?.status} />
+                      <input name='status' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" defaultValue={customer?.status} />
                     ) : (
                       <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{customer?.status}</p>
                     )
-                  }
-                </div>
+                  } 
+                </div>*/}
                 <div className='mt-6 flex flex-col gap-2'>
                   <h4 className='font-bold text-xs text-neutral-400'>Joined on</h4>
                   {
                     editMode ? (
-                      <input className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" defaultValue={joinedOn} />
+                      <input onChange={handleChange} name='joinedOn' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={joinedOn} />
                     ) : (
                       <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{joinedOn}</p>
                     )
@@ -168,10 +197,18 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                   {
                     editMode ? (
                       <div className='flex text-indigo-500 font-bold justify-center items-center gap-10 w-full'>
-                        <div>
+                        <div onClick={handleSave} className='cursor-pointer'>
                           <HiCheck size={20} className='stroke-4' />
                         </div>
-                        <div onClick={() => setEditMode(false)}>
+                        <div className='cursor-pointer' onClick={() => {
+                          setEditMode(false);
+                          setFormData({
+                            name: customer?.name || '',
+                            email: customer?.email || '',
+                            phone: customer?.phone || '',
+                            joinedOn: joinedOn || ''
+                          })
+                        }} >
                           <HiXMark size={20} className='stroke-4' />
                         </div>
                       </div>
