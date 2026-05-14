@@ -60,10 +60,10 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
       return;
     }
     const result = UpdateCustomerSchema.safeParse(formData)
-    if(!result.success) {
+    if (!result.success) {
       const fieldErrors: any = {};
       result.error.issues.forEach((err) => {
-        if(err.path[0]) {
+        if (err.path[0]) {
           fieldErrors[err.path[0]] = err.message
         }
       });
@@ -100,10 +100,11 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
   if (!isOpen) {
     return null
   }
+
   return (
     <>
       <div onClick={onClose} className='fixed inset-0 bg-black/40 z-40 transition-opacity' />
-      <div className='fixed overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:nones] [&::-webkit-scrollbar]:hidden  right-4 top-4 bottom-4 w-100 bg-neutal-900 z-50 bg-neutral-900/10 backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 transition-all px-4 py-4 rounded-2xl'>
+      <div className='fixed overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden  right-4 top-4 bottom-4 w-100 bg-neutal-900 z-50 bg-neutral-900/10 backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 transition-all px-4 py-4 rounded-2xl'>
         <div className='flex  fixed backdrop-blur-xs left-0 right-0 px-4 bg-neutral-900/10 justify-between items-center mb-10'>
           <h2 className='text-xl text-neutral-200 font-bold'>
             Customer Details
@@ -176,8 +177,8 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                     {
                       editMode ? (
                         <>
-                        <input onChange={handleChange} name='name' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={formData.name} />
-                        {errors.name && <span className='text-red-600 text-xs'>{errors.name}</span>}
+                          <input onChange={handleChange} name='name' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={formData.name} />
+                          {errors.name ? <span className='text-red-600 text-xs'>{errors.name}</span> : <span></span>}
                         </>
                       ) : (
                         <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{customer?.name}</p>
@@ -190,8 +191,8 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                     {
                       editMode ? (
                         <>
-                        <input onChange={handleChange} name='email' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={formData.email} />
-                        {errors.email && <span className='text-red-600 text-xs'>{errors.email}</span>}
+                          <input onChange={handleChange} name='email' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={formData.email} />
+                          {errors.email && <span className='text-red-600 text-xs'>{errors.email}</span>}
                         </>
                       ) : (
                         <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{customer?.email}</p>
@@ -204,8 +205,8 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                     {
                       editMode ? (
                         <>
-                        <input onChange={handleChange} name='phone' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={formData.phone} />
-                        {errors.phone && <span className='text-red-600 text-xs'>{errors.phone}</span>}
+                          <input onChange={handleChange} name='phone' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={formData.phone} />
+                          {errors.phone && <span className='text-red-600 text-xs'>{errors.phone}</span>}
                         </>
                       ) : (
                         <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{customer?.phone}</p>
@@ -224,14 +225,14 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                 </div>*/}
                   <div className='mt-6 flex flex-col gap-2'>
                     <h4 className={`${editMode && 'hidden'} font-bold text-xs text-neutral-400`}>Joined on</h4>
-                    <p className={`${editMode?'hidden':''} font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm`}>{joinedOn}</p>
+                    <p className={`${editMode ? 'hidden' : ''} font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm`}>{joinedOn}</p>
                   </div>
                   {
                     isPending ?
-                    <div className='border-3 border-b-0 animate-spin border-r-0 h-10 w-10 rounded-full border-indigo-500 absolute inset-0 m-auto'></div> :
-                    <div></div>
+                      <div className='border-3 border-b-0 animate-spin border-r-0 h-10 w-10 rounded-full border-indigo-500 absolute inset-0 m-auto'></div> :
+                      <div></div>
                   }
-                  
+
                 </div>
                 <div className='mt-4'>
                   {
@@ -256,7 +257,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                     )
                   }
                 </div>
-                
+
               </div>
             ) : (
               <div className='cursor-default'>

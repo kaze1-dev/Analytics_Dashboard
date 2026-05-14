@@ -1,5 +1,6 @@
 "use client";
 import CustomDrawer from '@/components/customDrawer';
+import CustomerPanel from '@/components/newCustomerPanel';
 import Pagination from '@/components/pagination';
 import useCustomerData from '@/hooks/useCustomerData';
 import useCustomerDetails from '@/hooks/useCustomerDetails';
@@ -87,6 +88,7 @@ export default function Customers() {
                     customer={customerDetails}
                     isLoading={isPending}
                   />
+                  <CustomerPanel />
                   <Pagination totalPages={totalPages} currentPage={currentPage} />
                 </div>
               )
