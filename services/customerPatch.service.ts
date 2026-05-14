@@ -11,9 +11,7 @@ const updateCustomer = async (customerId:string, data: any) => {
     where: {
       id: customerId
     },
-    data: {
-      ...data
-    }
+    data: data
   })
   return updatedCustomer
 }

@@ -1,6 +1,6 @@
 import useUpdateCustomer from '@/hooks/useCustomerPatch';
 import { format } from 'date-fns';
-import React, { InputEvent, ReactEventHandler, SyntheticEvent, useState } from 'react'
+import React, { InputEvent, ReactEventHandler, SyntheticEvent, useEffect, useState } from 'react'
 import { HiLocationMarker, HiPencilAlt } from 'react-icons/hi';
 import { HiCheck, HiCheckCircle, HiPencilSquare, HiUserCircle, HiXCircle, HiXMark } from 'react-icons/hi2';
 
@@ -32,17 +32,10 @@ interface Props {
   };
 }
 const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
-  if (!isOpen) {
-    return null
-  }
-  const nameLength = customer?.name.length || 0
-  const totalAmount = Math.round(Number(customer?.totalSpent))
+  const [activeTab, setActiveTab] = useState<'Information' | 'Orders'>('Information')
+  const [editMode, setEditMode] = useState<boolean>(false)
   const date = customer?.createdAt
   const joinedOn = date ? format(new Date(date), 'dd MMM yyyy') : 'N/A'
-  const [activeTab, setActiveTab] = useState<'Information' | 'Orders'>('Information')
-  const allItems = customer?.orders.flatMap(order => order.items) || [];
-  const totalItemsQuantity = allItems.reduce((sum, item) => sum + item.quantity, 0);
-  const [editMode, setEditMode] = useState<boolean>(false)
   const [formData, setFormData] = useState({
     name: customer?.name || '',
     email: customer?.email || '',
@@ -50,6 +43,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
     joinedOn: joinedOn || ''
   });
   const { mutate, isPending } = useUpdateCustomer()
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -62,14 +56,36 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
       console.error("No customer ID found");
       return;
     }
+    const {joinedOn, ...dataToSubmit} = formData
     mutate(
-      { id: customer?.id, data: formData },
+      { id: customer?.id, data: dataToSubmit },
       {
         onSuccess: () => {
           setEditMode(false);
         }
       }
     )
+  }
+
+  const nameLength = customer?.name.length || 0
+  const totalAmount = Math.round(Number(customer?.totalSpent))
+  const allItems = customer?.orders.flatMap(order => order.items) || [];
+  const totalItemsQuantity = allItems.reduce((sum, item) => sum + item.quantity, 0);
+
+
+  useEffect(() => {
+    if (customer && isOpen) {
+      const formattedDate = customer.createdAt ? format(new Date(customer.createdAt), 'dd MMM yyyy') : 'N/A';
+      setFormData({
+        name: customer.name || '',
+        email: customer.email || '',
+        phone: customer.phone || '',
+        joinedOn: formattedDate
+      })
+    }
+  }, [customer, isOpen])
+  if (!isOpen) {
+    return null
   }
   return (
     <>
@@ -141,39 +157,40 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                 <div onClick={() => setEditMode(true)} className='flex justify-end mt-6'>
                   <HiPencilSquare size={18} className={`text-indigo-500 ${editMode ? 'hidden' : ''} cursor-pointer`} />
                 </div>
-                <div className='mt-6 flex flex-col gap-2'>
-                  <h4 className='font-bold text-xs text-neutral-400'>Name</h4>
-                  {
-                    editMode ? (
-                      <input onChange={handleChange} name='name' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={formData.name} />
-                    ) : (
-                      <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{customer?.name}</p>
-                    )
-                  }
+                <div className='relative'>
+                  <div className='mt-6 flex flex-col gap-2'>
+                    <h4 className='font-bold text-xs text-neutral-400'>Name</h4>
+                    {
+                      editMode ? (
+                        <input onChange={handleChange} name='name' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={formData.name} />
+                      ) : (
+                        <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{customer?.name}</p>
+                      )
+                    }
 
-                </div>
-                <div className='mt-6 flex flex-col gap-2'>
-                  <h4 className='font-bold text-xs text-neutral-400'>Email</h4>
-                  {
-                    editMode ? (
-                      <input onChange={handleChange} name='email' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={customer?.email} />
-                    ) : (
-                      <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{customer?.email}</p>
-                    )
-                  }
+                  </div>
+                  <div className='mt-6 flex flex-col gap-2'>
+                    <h4 className='font-bold text-xs text-neutral-400'>Email</h4>
+                    {
+                      editMode ? (
+                        <input onChange={handleChange} name='email' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={formData.email} />
+                      ) : (
+                        <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{customer?.email}</p>
+                      )
+                    }
 
-                </div>
-                <div className='mt-6 flex flex-col gap-2'>
-                  <h4 className='font-bold text-xs text-neutral-400'>Phone number</h4>
-                  {
-                    editMode ? (
-                      <input onChange={handleChange} name='phone' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={customer?.phone} />
-                    ) : (
-                      <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{customer?.phone}</p>
-                    )
-                  }
-                </div>
-                {/* <div className='mt-6 flex flex-col gap-2'>
+                  </div>
+                  <div className='mt-6 flex flex-col gap-2'>
+                    <h4 className='font-bold text-xs text-neutral-400'>Phone number</h4>
+                    {
+                      editMode ? (
+                        <input onChange={handleChange} name='phone' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={formData.phone} />
+                      ) : (
+                        <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{customer?.phone}</p>
+                      )
+                    }
+                  </div>
+                  {/* <div className='mt-6 flex flex-col gap-2'>
                   <h4 className='font-bold text-xs text-neutral-400'>Status</h4>
                    {
                     editMode ? (
@@ -183,15 +200,16 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                     )
                   } 
                 </div>*/}
-                <div className='mt-6 flex flex-col gap-2'>
-                  <h4 className='font-bold text-xs text-neutral-400'>Joined on</h4>
+                  <div className='mt-6 flex flex-col gap-2'>
+                    <h4 className='font-bold text-xs text-neutral-400'>Joined on</h4>
+                    <p className={`${editMode?'hidden':''} font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm`}>{joinedOn}</p>
+                  </div>
                   {
-                    editMode ? (
-                      <input onChange={handleChange} name='joinedOn' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={joinedOn} />
-                    ) : (
-                      <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{joinedOn}</p>
-                    )
+                    isPending ?
+                    <div className='border-3 border-b-0 animate-spin border-r-0 h-10 w-10 rounded-full border-indigo-500 absolute inset-0 m-auto'></div> :
+                    <div></div>
                   }
+                  
                 </div>
                 <div className='mt-4'>
                   {
@@ -217,6 +235,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                     )
                   }
                 </div>
+                
               </div>
             ) : (
               <div className='cursor-default'>

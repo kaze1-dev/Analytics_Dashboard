@@ -7,7 +7,11 @@ const updateCustomer = async ({id, data}: {id: string, data: any}) => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(data)
-  })
+  });
+  if(!response.ok) {
+    throw new Error("Failed to update the customer")
+  }
+  return response.json()
 }
 
 const useUpdateCustomer = () => {
@@ -16,7 +20,7 @@ const useUpdateCustomer = () => {
   return useMutation({
     mutationFn: updateCustomer,
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({queryKey: ['customers', variables.id]})
+      queryClient.invalidateQueries({queryKey: ['customerDetails', variables.id]})
       queryClient.invalidateQueries({queryKey: ['customersData']})
     }
   })
