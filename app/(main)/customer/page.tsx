@@ -6,7 +6,8 @@ import useCustomerData from '@/hooks/useCustomerData';
 import useCustomerDetails from '@/hooks/useCustomerDetails';
 import { useSearchParams } from 'next/navigation';
 import React, { useState } from 'react'
-import { HiMiniTrash, HiOutlineTrash, HiPencilSquare, HiTrash } from 'react-icons/hi2';
+import { FiChevronRight } from 'react-icons/fi';
+import { HiArrowRight, HiMiniTrash, HiOutlineTrash, HiPencilSquare, HiTrash } from 'react-icons/hi2';
 
 export default function Customers() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -84,12 +85,12 @@ export default function Customers() {
                               </span>
                             </td>
                             <td className='font-bold py-6 text-center text-white/80 '>
-                              <div className='flex gap-8'>
-                                <div className='text-red-600 stroke-3'>
-                                  <HiOutlineTrash  size={20} />
+                              <div className='flex ml-3'>
+                                <div className='text-indigo-500'>
+                                  <FiChevronRight size={18} />
                                 </div>
                                 <div className='text-indigo-500'>
-                                  <HiPencilSquare size={20} />
+                                  <FiChevronRight size={18} />  
                                 </div>
                               </div>
                             </td>

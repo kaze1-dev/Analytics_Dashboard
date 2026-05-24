@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 const fetcher = async (customerId:string | null) => {
-  const res = await fetch(`/api/tables/customerDetails?customerId=${customerId}`);
+  const res = await fetch(`/api/customers/details?customerId=${customerId}`);
   if(!res.ok) {
     throw new Error("Error while fetching customer's details")
   }

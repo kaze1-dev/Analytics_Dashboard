@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
-import customerService from "@/services/customers.service";
+import { createCustomer, customerService, getCustomerData, getSpecificCustomer, updateCustomer } from "@/services/customers.service";
 
-const customerController = async () => {
+export const customerController = async () => {
   try {
     const totalCustomers = await customerService();
     return NextResponse.json({
@@ -17,4 +17,78 @@ const customerController = async () => {
   }
 }
 
-export default customerController;
+export const customerUpdateController = async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+  try {
+    const { id } = await params
+    const body = await req.json();
+
+    const updated = await updateCustomer(id, body);
+    return NextResponse.json({
+      success: true,
+      data: updated
+    }, { status: 201 })
+  } catch (error) {
+    console.error('Update error: ', error);
+    return NextResponse.json({
+      success: false,
+      message: 'Could not update customer'
+    }, { status: 500 })
+  }
+}
+
+
+export const createCustomerController = async (req: NextRequest) => {
+  try {
+
+    const body = await req.json()
+    const newCustomer = await createCustomer(body);
+    return NextResponse.json(newCustomer, { status: 201 })
+  } catch (error) {
+    console.error("Error creating customer: ", error);
+    return NextResponse.json({
+      success: false,
+      message: "Failed to create Customer. Please try again later."
+    }, { status: 500 })
+  }
+
+}
+
+export const customerDataController = async (req: NextRequest) => {
+  try {
+    const { searchParams } = new URL(req.url);
+    const page = Number(searchParams.get("page")) || 1
+    const size = Number(searchParams.get("size")) || 25
+    const customersData = await getCustomerData(page, size);
+    return NextResponse.json(customersData, { status: 200 })
+  } catch (error) {
+    console.error("Failed to fetch customers data: ", error);
+    return NextResponse.json({
+      success: false,
+      message: "Error while Fetching customers data"
+    }, { status: 500 })
+  }
+
+}
+
+export const customerDetails = async (req: NextRequest) => {
+  try {
+    const { searchParams } = new URL(req.url);
+    const customerId = searchParams?.get("customerId")
+    if (!customerId) {
+      return NextResponse.json({
+        success: false,
+        message: `CustomerId is missing`
+      }, { status: 400 })
+    }
+    const customer = await getSpecificCustomer(customerId)
+    return NextResponse.json(customer, { status: 200 })
+  } catch (error) {
+    console.error("Error fetching customer details: ", error)
+    return NextResponse.json({
+      success: false,
+      message: "Error feteching customer's details"
+    }, { status: 500 })
+  }
+}
+
+// export {customerController, customerUpdateController, createCustomerController};

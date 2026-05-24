@@ -1,6 +1,5 @@
 import prisma from "@/lib/prisma";
 import { format, subMonths, subYears, subWeeks } from "date-fns"
-import { promises } from "dns";
 
 const getStats = async (timeframe: string) => {
   let startDate: Date;

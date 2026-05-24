@@ -1,4 +1,4 @@
-import { CustomerData } from "@/services/customersData.service";
+import { CustomerData } from "@/services/customers.service";
 import { useQuery } from "@tanstack/react-query";
 
 interface CustomerResponse {
@@ -11,7 +11,7 @@ interface CustomerResponse {
 }
 
 const fetcher = async (page: number, size: number) => {
-  const res = await fetch(`/api/tables/fetchCustomers?page=${page}&size=${size}`);
+  const res = await fetch(`/api/customers?page=${page}&size=${size}`);
   if(!res.ok) {
     throw new Error("Failed to fetch customers")
   }

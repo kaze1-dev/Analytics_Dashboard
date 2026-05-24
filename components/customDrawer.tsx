@@ -146,7 +146,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
 
                 </div>
                 <div className=''>
-                  <div className='bg-neutral-950 text-red-600 p-1 rounded'>
+                  <div className=' text-red-600 p-1 rounded'>
                   <HiOutlineTrash size={22} />
                   </div>
                 </div>

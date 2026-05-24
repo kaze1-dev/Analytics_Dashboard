@@ -1,22 +1,18 @@
-import getTotalCustomer from "@/services/orders.service";
+import  { getOrderInfo, } from "@/services/orders.service";
 import { NextResponse, NextRequest } from "next/server";
 
-const ordersController = async () => {
 
+export const orderInfoController = async (req: NextRequest) => {
+  const { searchParams } = new URL(req.url);
+  const timeFrame = searchParams.get("timeframe")
   try {
-    const total = await getTotalCustomer();
-    return NextResponse.json({
-      success: true,
-      data: total
-    }, {status: 200})
+    const data = await getOrderInfo(timeFrame as string)
+    return NextResponse.json(data)
   } catch (error) {
-    console.error("Failed to fetch total customers")
-    NextResponse.json({
+    console.error("Error fetching order info: ", error)
+    return NextResponse.json({
       success: false,
-      message: "Error while fetching customers"
-    }, {status: 200})
+      message: "Failed to fetch order information"
+    }, {status: 500})
   }
-
 }
-
-export default ordersController
