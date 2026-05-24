@@ -27,6 +27,7 @@ model Customer {
   phone     String?
   address   String?
   orders    Order[]
+  status    String
   createdAt DateTime @default(now())
 }
 

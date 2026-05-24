@@ -12,5 +12,17 @@ export const UpdateCustomerSchema = z.object({
   phone: z.string().min(10, "phone number is too short")
 })
 
-export {registerSchema} 
+export const newCustomerSchema = z.object({
+  name: z.string().trim().min(3, "Name Must be at least 3 characters"),
+  email: z.email("InValid email Address").trim().toLowerCase(),
+  phone: z.string().min(10, "Phone number is too short"),
+  address: z.string().min(5, "Please provide a full address"),
+ status: z.string().refine(
+  (val) => ["active", "inactive", "lead", "pending"].includes(val),
+  { message: "Please select a valid status" }
+)
+})
+
 export type UpdateCustomerInput = z.infer<typeof UpdateCustomerSchema>
+export type NewCustomerInput = z.infer<typeof newCustomerSchema>
+export {registerSchema} 

@@ -1,10 +1,9 @@
 import useUpdateCustomer from '@/hooks/useCustomerPatch';
-import updateCustomer from '@/services/customerPatch.service';
 import { UpdateCustomerInput, UpdateCustomerSchema } from '@/validaton';
 import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react'
-import { HiLocationMarker, HiPencilAlt } from 'react-icons/hi';
-import { HiCheck, HiCheckCircle, HiPencilSquare, HiUserCircle, HiXCircle, HiXMark } from 'react-icons/hi2';
+import { HiLocationMarker, HiTrash } from 'react-icons/hi';
+import { HiCheck, HiOutlineTrash, HiPencilSquare, HiUserCircle, HiXMark } from 'react-icons/hi2';
 
 interface Props {
   isOpen: boolean;
@@ -20,14 +19,13 @@ interface Props {
     address: string;
     phone: string;
     totalSpent: number;
-    // FIXED: Orders and Items are ARRAYS []
     orders: {
       items: {
         quantity: number;
         price: number;
         product: {
           name: string;
-          price: number; // Changed to number for math
+          price: number;
         };
       }[];
     }[];
@@ -38,6 +36,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
   const [editMode, setEditMode] = useState<boolean>(false)
   const [errors, setErrors] = useState<Partial<Record<keyof UpdateCustomerInput, string>>>({})
   const date = customer?.createdAt
+
   const joinedOn = date ? format(new Date(date), 'dd MMM yyyy') : 'N/A'
   const [formData, setFormData] = useState({
     name: customer?.name || '',
@@ -101,6 +100,13 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
     return null
   }
 
+  const Colors: any = {
+    active: 'bg-green-600/20 text-green-600',
+    inactive: 'bg-red-600/20 text-red-600',
+    lead: 'bg-stone-600/20 text-stone-500',
+    pending: 'bg-yellow-600/20 text-yellow-600'
+  }
+
   return (
     <>
       <div onClick={onClose} className='fixed inset-0 bg-black/40 z-40 transition-opacity' />
@@ -119,24 +125,31 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
         ) : (
           <div className='mt-10'>
             <div className='cursor-default' >
-              <div className='flex items-center gap-2 mb-6'>
-                <HiUserCircle size={50} className='text-indigo-500' />
-                <div className='flex flex-col gap-1'>
-                  <h2 className='flex items-center gap-2'>
-                    <span className='text-xl font-bold text-neutral-300'>
-                      {
-                        nameLength >= 18 ? `${customer?.name.substring(0, 18)}...` : customer?.name
-                      }
-                    </span>
-                    <span className='text-2xl text-neutral-300'>&middot;</span>
-                    <span className={`${customer?.status === "Active" ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-500'} font-bold rounded-full px-3 py-2 text-xs`}>{customer?.status}</span>
-                  </h2>
-                  <p className='text-xs flex items-center gap-1 font-semibold text-neutral-400'>
-                    <HiLocationMarker size={16} className='mb-0.5' />
-                    <span>{customer?.address}</span>
-                  </p>
-                </div>
+              <div className='flex justify-between'>
+                <div className='flex items-center gap-2 mb-6'>
+                  <HiUserCircle size={50} className='text-indigo-500' />
+                  <div className='flex flex-col gap-1'>
+                    <h2 className='flex items-center gap-2'>
+                      <span className='text-xl font-bold text-neutral-300'>
+                        {
+                          nameLength >= 18 ? `${customer?.name.substring(0, 18)}...` : customer?.name
+                        }
+                      </span>
+                      <span className='text-2xl text-neutral-300'>&middot;</span>
+                      <span className={`${Colors[customer?.status!]} font-bold rounded-full px-3 py-2 text-xs`}>{customer?.status}</span>
+                    </h2>
+                    <p className='text-xs flex items-center gap-1 font-semibold text-neutral-400'>
+                      <HiLocationMarker size={16} className='mb-0.5' />
+                      <span>{customer?.address}</span>
+                    </p>
+                  </div>
 
+                </div>
+                <div className=''>
+                  <div className='bg-neutral-950 text-red-600 p-1 rounded'>
+                  <HiOutlineTrash size={22} />
+                  </div>
+                </div>
               </div>
               <div className='flex w-full justify-between px-10 py-4 border border-neutral-800 rounded-2xl hover:border-neutral-700 transition-all'>
                 <div className='flex flex-col gap-1'>

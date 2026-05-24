@@ -6,9 +6,11 @@ import useCustomerData from '@/hooks/useCustomerData';
 import useCustomerDetails from '@/hooks/useCustomerDetails';
 import { useSearchParams } from 'next/navigation';
 import React, { useState } from 'react'
+import { HiMiniTrash, HiOutlineTrash, HiPencilSquare, HiTrash } from 'react-icons/hi2';
 
 export default function Customers() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [isOpen, setIsOpen] = useState<boolean>()
   const searchParams = useSearchParams();
   const page = searchParams.get("page");
   const size = searchParams.get('size');
@@ -20,6 +22,13 @@ export default function Customers() {
   const totalPages = Number(metadata?.totalPages)
   const currentPage = Number(metadata?.currentPage)
   const { data: customerDetails, isLoading: isPending, error: isError } = useCustomerDetails(selectedId)
+  const Colors: any = {
+    active: 'bg-green-600/10 text-green-600',
+    inactive: 'bg-red-600/10 text-red-600',
+    lead: 'bg-stone-600/10 text-stone-500',
+    pending: 'bg-yellow-600/10 text-yellow-600'
+  }
+
   return (
     <>
 
@@ -38,14 +47,13 @@ export default function Customers() {
                   Track and manage your customers efficiently
                 </p>
               </div>
-              <button className='bg-indigo-600 px-6 rounded-full py-1 font-bold  text-neutral-200 flex justify-center items-center gap-2'>
+              <button onClick={() => setIsOpen(true)} className='bg-indigo-700 px-6 rounded-full py-1 font-bold  text-white/80 flex justify-center items-center gap-2 cursor-pointer'>
 
                 <span className='text-2xl'>+</span> New customer
               </button>
             </div>
             {
               isLoading ? (
-
                 <div className='bg-neutral-900 rounded-2xl animate-pulse w-full h-120'></div>
               ) : (
                 <div className='overflow-x-auto border border-neutral-800 px-6 rounded-2xl'>
@@ -55,8 +63,8 @@ export default function Customers() {
                         {/* <th className='pt-6 pb-4'>Customer Id</th> */}
                         <th className='py-4'>Name</th>
                         <th className='py-4'>Email</th>
-                        <th className='py-4'>Spent</th>
                         <th className='py-4'>Status</th>
+                        <th className='py-4'>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -68,14 +76,24 @@ export default function Customers() {
                             onClick={() => setSelectedId(customer.id)}
                           >
                             {/* <td className='font-bold py-6 text-neutral-400'>{customer.id.slice(-4).toUpperCase()}</td> */}
-                            <td className='font-bold py-6 text-neutral-400'>{customer.name}</td>
-                            <td className='font-bold py-6 text-neutral-400'>{customer.email}</td>
-                            <td className='font-bold py-6 text-neutral-400 pr-20'>${customer?.totalAmount.toFixed(0)}</td>
-                            <td className={`font-bold py-6 text-neutral-400`}>
-                              <span className={` ${customer.status === "Active" ? 'bg-green-950/50  text-green-600' : 'bg-red-950 text-red-600'} text-xs font-bold px-3 py-1 rounded-xl`}>
+                            <td className='font-bold py-6 text-white/80'>{customer.name}</td>
+                            <td className='font-bold py-6 text-white/80'>{customer.email}</td>
+                            <td className={`font-bold py-6 text-white/80 pr-15`}>
+                              <span className={`text-xs font-bold px-3  py-1 rounded-xl ${Colors[customer.status]}`}>
                                 {customer.status}
                               </span>
                             </td>
+                            <td className='font-bold py-6 text-center text-white/80 '>
+                              <div className='flex gap-8'>
+                                <div className='text-red-600 stroke-3'>
+                                  <HiOutlineTrash  size={20} />
+                                </div>
+                                <div className='text-indigo-500'>
+                                  <HiPencilSquare size={20} />
+                                </div>
+                              </div>
+                            </td>
+
                           </tr>
                         ))
 
@@ -88,7 +106,10 @@ export default function Customers() {
                     customer={customerDetails}
                     isLoading={isPending}
                   />
-                  <CustomerPanel />
+                  <CustomerPanel
+                    isOpen={isOpen}
+                    closed={() => setIsOpen(false)}
+                  />
                   <Pagination totalPages={totalPages} currentPage={currentPage} />
                 </div>
               )

@@ -7,7 +7,7 @@ export interface CustomerData {
   name: string;
   createdAt: Date;
   orderCount: number;
-  status: "Active" | "Inactive";
+  status: string;
   totalAmount: number
 } 
 
@@ -21,6 +21,7 @@ const getCustomerData = async (page: number = 1, pageSize: number = 25) => {
         id: true,
         email: true,
         name: true,
+        status: true,
         createdAt: true,
         orders: {
           select: {
@@ -42,14 +43,13 @@ const getCustomerData = async (page: number = 1, pageSize: number = 25) => {
 
 // Inside getCustomerData.ts
 const data: CustomerData[] = customers.map(customer => {
-  // Sum up the totalAmount from each order object
+
   const total = customer.orders.reduce((sum, order) => sum + order.totalAmount, 0);
 
   return {
     ...customer,
     orderCount: customer._count.orders,
-    status: customer._count.orders > 0 ? "Active" : "Inactive",
-    totalAmount: total, // Now this is a NUMBER, not an object
+    totalAmount: total,
   };
 });
 
