@@ -1,3 +1,4 @@
+import useDeleteCustomer from '@/hooks/useDeleteCustomer';
 import useNewCustomer from '@/hooks/useNewCustomer';
 import { NewCustomerInput, newCustomerSchema } from '@/validaton';
 import React, { useState } from 'react'
@@ -48,6 +49,8 @@ const CustomerPanel = ({ isOpen, closed }: CustomerPanel) => {
     )
   }
 
+  const {mutate: run, isPending: loading} = useDeleteCustomer();
+
   return (
 
     <>
@@ -79,7 +82,7 @@ const CustomerPanel = ({ isOpen, closed }: CustomerPanel) => {
                   </div>
                   <div className='flex flex-col gap-2 mb-8'>
                     <h4 className='text-xs text-neutral-400 font-bold'>Status</h4>
-                    <input onChange={handleChange} name='status' className='w-full rounded-xl px-4 py-2 border border-neutral-800 text-sm' type="text" placeholder='Active / Inactive' />
+                    <input onChange={handleChange} name='status' className='w-full rounded-xl px-4 py-2 border border-neutral-800 text-sm' type="text" placeholder='active / inactive / lead / pending' />
                   </div>
                 </div>
                 <div className='flex justify-center pb-4  items-center'>

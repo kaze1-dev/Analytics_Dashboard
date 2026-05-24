@@ -59,11 +59,11 @@ export interface CustomerData {
   orderCount: number;
   status: string;
   totalAmount: number
-} 
+}
 
 export const getCustomerData = async (page: number = 1, pageSize: number = 25) => {
   const skip = (page - 1) * pageSize
-  const [customers, totalCount, ] = await Promise.all([
+  const [customers, totalCount,] = await Promise.all([
     prisma.customer.findMany({
       take: pageSize,
       skip: skip,
@@ -91,16 +91,16 @@ export const getCustomerData = async (page: number = 1, pageSize: number = 25) =
     prisma.customer.count(),
   ])
 
-const data: CustomerData[] = customers.map(customer => {
+  const data: CustomerData[] = customers.map(customer => {
 
-  const total = customer.orders.reduce((sum, order) => sum + order.totalAmount, 0);
+    const total = customer.orders.reduce((sum, order) => sum + order.totalAmount, 0);
 
-  return {
-    ...customer,
-    orderCount: customer._count.orders,
-    totalAmount: total,
-  };
-});
+    return {
+      ...customer,
+      orderCount: customer._count.orders,
+      totalAmount: total,
+    };
+  });
 
   return {
     data,
@@ -141,7 +141,7 @@ export const getSpecificCustomer = async (customerId: string) => {
           }
         }
       },
-      
+
     }),
     prisma.order.aggregate({
       where: {
@@ -162,6 +162,14 @@ export const getSpecificCustomer = async (customerId: string) => {
     orderCount: customer._count.orders,
     totalSpent: aggregate._sum.totalAmount || 0
   }
+}
+
+export const removeCustomer = async (customerID: string) => {
+  const remove = await prisma.customer.delete({
+    where: {
+      id: customerID
+    }
+  })
 }
 
 

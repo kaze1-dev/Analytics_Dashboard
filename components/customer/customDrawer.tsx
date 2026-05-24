@@ -2,8 +2,9 @@ import useUpdateCustomer from '@/hooks/useCustomerPatch';
 import { UpdateCustomerInput, UpdateCustomerSchema } from '@/validaton';
 import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react'
-import { HiLocationMarker, HiTrash } from 'react-icons/hi';
+import { HiLocationMarker } from 'react-icons/hi';
 import { HiCheck, HiOutlineTrash, HiPencilSquare, HiUserCircle, HiXMark } from 'react-icons/hi2';
+import WarningBox from './warningBox';
 
 interface Props {
   isOpen: boolean;
@@ -35,6 +36,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
   const [activeTab, setActiveTab] = useState<'Information' | 'Orders'>('Information')
   const [editMode, setEditMode] = useState<boolean>(false)
   const [errors, setErrors] = useState<Partial<Record<keyof UpdateCustomerInput, string>>>({})
+  const [warnBox, setWarnBox] = useState<boolean>(false)
   const date = customer?.createdAt
 
   const joinedOn = date ? format(new Date(date), 'dd MMM yyyy') : 'N/A'
@@ -108,7 +110,11 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
   }
 
   return (
-    <>
+    <div>
+      {
+        warnBox && <WarningBox close= {() => setWarnBox(false)} />
+      }
+      
       <div onClick={onClose} className='fixed inset-0 bg-black/40 z-40 transition-opacity' />
       <div className='fixed overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden  right-4 top-4 bottom-4 w-100 bg-neutal-900 z-50 bg-neutral-900/10 backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 transition-all px-4 py-4 rounded-2xl'>
         <div className='flex  fixed backdrop-blur-xs left-0 right-0 px-4 bg-neutral-900/10 justify-between items-center mb-10'>
@@ -146,7 +152,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
 
                 </div>
                 <div className=''>
-                  <div className=' text-red-600 p-1 rounded'>
+                  <div onClick={() => setWarnBox(true)} className=' text-red-600 p-1 rounded cursor-pointer'>
                   <HiOutlineTrash size={22} />
                   </div>
                 </div>
@@ -306,11 +312,11 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                 </div>
               </div>
             )}
-
+              
           </div>
         )}
       </div>
-    </>
+    </div>
   )
 }
 

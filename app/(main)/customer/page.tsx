@@ -1,13 +1,12 @@
 "use client";
-import CustomDrawer from '@/components/customDrawer';
-import CustomerPanel from '@/components/newCustomerPanel';
+import CustomDrawer from '@/components/customer/customDrawer';
+import CustomerPanel from '@/components/customer/newCustomerPanel';
 import Pagination from '@/components/pagination';
 import useCustomerData from '@/hooks/useCustomerData';
 import useCustomerDetails from '@/hooks/useCustomerDetails';
 import { useSearchParams } from 'next/navigation';
 import React, { useState } from 'react'
 import { FiChevronRight } from 'react-icons/fi';
-import { HiArrowRight, HiMiniTrash, HiOutlineTrash, HiPencilSquare, HiTrash } from 'react-icons/hi2';
 
 export default function Customers() {
   const [selectedId, setSelectedId] = useState<string | null>(null)

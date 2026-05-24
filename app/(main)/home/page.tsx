@@ -1,8 +1,6 @@
 "use client"
-import Bar from "../../../components/graphs/bar";
-import Cards from "../../../components/cards";
 import Donut from "../../../components/graphs/donut";
-import OrdersTable from "../../../components/recentOrders";
+import OrdersTable from "../../../components/home/recentOrders";
 import SalesChart from "@/components/graphs/area";
 import { useState } from "react";
 import useStats from "@/hooks/useStats";

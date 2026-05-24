@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { createCustomer, customerService, getCustomerData, getSpecificCustomer, updateCustomer } from "@/services/customers.service";
+import { createCustomer, customerService, getCustomerData, getSpecificCustomer, removeCustomer, updateCustomer } from "@/services/customers.service";
 
 export const customerController = async () => {
   try {
@@ -89,6 +89,24 @@ export const customerDetails = async (req: NextRequest) => {
       message: "Error feteching customer's details"
     }, { status: 500 })
   }
+}
+
+export const removeCustomerController = async ({ params }: { params: Promise<{ id: string }> }) => {
+
+  try {
+    const { id } = await params;
+    const removed = await removeCustomer(id)
+    return NextResponse.json({
+      success: true,
+    }, { status: 200 })
+  } catch (error) {
+    console.error("Error while removing customer: ", error);
+    return NextResponse.json({
+      success: false,
+      message: "Something went wrong while removing customer. Please try again later"
+    }, { status: 500 })
+  }
+
 }
 
 // export {customerController, customerUpdateController, createCustomerController};
