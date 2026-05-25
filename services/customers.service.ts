@@ -61,7 +61,7 @@ export interface CustomerData {
   totalAmount: number
 }
 
-export const getCustomerData = async (page: number = 1, pageSize: number = 25) => {
+export const getCustomerData = async (page: number = 1, pageSize: number = 25, sortBy:string, orderBy:string) => {
   const skip = (page - 1) * pageSize
   const [customers, totalCount,] = await Promise.all([
     prisma.customer.findMany({
@@ -85,7 +85,7 @@ export const getCustomerData = async (page: number = 1, pageSize: number = 25) =
         },
       },
       orderBy: {
-        createdAt: "desc"
+        [sortBy]: orderBy
       }
     }),
     prisma.customer.count(),

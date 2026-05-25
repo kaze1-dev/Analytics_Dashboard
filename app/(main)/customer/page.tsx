@@ -4,19 +4,33 @@ import CustomerPanel from '@/components/customer/newCustomerPanel';
 import Pagination from '@/components/pagination';
 import useCustomerData from '@/hooks/useCustomerData';
 import useCustomerDetails from '@/hooks/useCustomerDetails';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react'
 import { FiChevronRight } from 'react-icons/fi';
+import { HiArrowDown, HiArrowsUpDown, HiArrowUp } from 'react-icons/hi2';
 
 export default function Customers() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState<boolean>()
   const searchParams = useSearchParams();
+  const router = useRouter();
   const page = searchParams.get("page");
   const size = searchParams.get('size');
+  const sortBy = searchParams.get("sortBy") || "name";
+  const orderBy = searchParams.get("orderBy") || "asc";
   const pageNum = Number(page) || 1;
   const sizeNum = Number(size) || 25;
-  const { data: result, isLoading, error } = useCustomerData(pageNum, sizeNum);
+  const { data: result, isLoading, error } = useCustomerData(pageNum, sizeNum, sortBy, orderBy);
+  const handleSort = (columnName: string) => {
+    let newOrder = 'asc';
+    if (sortBy === columnName) {
+      newOrder = orderBy === 'asc' ? 'desc' : 'asc'
+    }
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('sortBy', columnName);
+    params.set('orderBy', newOrder)
+    router.push(`/customer?${params.toString()}`)
+  }
   const customers = result?.data || []
   const metadata = result?.metadata
   const totalPages = Number(metadata?.totalPages)
@@ -61,10 +75,24 @@ export default function Customers() {
                     <thead>
                       <tr className='text-neutral-400 text-left border-b border-neutral-700'>
                         {/* <th className='pt-6 pb-4'>Customer Id</th> */}
-                        <th className='py-4'>Name</th>
-                        <th className='py-4'>Email</th>
-                        <th className='py-4'>Status</th>
-                        <th className='py-4'>Actions</th>
+                        <th onClick={() => handleSort('name')} className='py-4 '>
+                          <div className='flex items-center gap-2 cursor-pointer'>
+                            Name {sortBy === 'name' ? (orderBy === 'asc' ? <HiArrowUp className='text-indigo-500 stroke-1' /> : <HiArrowDown className='text-indigo-500 stroke-1' />) : <HiArrowsUpDown className='stroke-1' />}
+                          </div>
+                        </th>
+                        <th onClick={() => handleSort('email')} className='py-4 '>
+                          <div className='flex items-center gap-2 cursor-pointer'>
+                            Email {sortBy === 'email' ? (orderBy === 'asc' ? <HiArrowUp className='text-indigo-500 stroke-1' /> : <HiArrowDown className='text-indigo-500 stroke-1' />) : <HiArrowsUpDown className='stroke-1' />}
+                          </div>
+                        </th>
+                        <th onClick={() => handleSort('status')} className='py-4 '>
+                          <div className='flex items-center gap-2 cursor-pointer'>
+                            Status {sortBy === 'status' ? (orderBy === 'asc' ? <HiArrowUp className='text-indigo-500 stroke-1' /> : <HiArrowDown className='text-indigo-500 stroke-1' />) : <HiArrowsUpDown className='stroke-1' />}
+                          </div>
+                        </th>
+                        <th className='py-4 cursor-default'>
+                          Actions
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -89,7 +117,7 @@ export default function Customers() {
                                   <FiChevronRight size={18} />
                                 </div>
                                 <div className='text-indigo-500'>
-                                  <FiChevronRight size={18} />  
+                                  <FiChevronRight size={18} />
                                 </div>
                               </div>
                             </td>
