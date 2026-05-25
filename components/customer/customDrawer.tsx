@@ -112,7 +112,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
   return (
     <div>
       {
-        warnBox && <WarningBox close= {() => setWarnBox(false)} />
+        warnBox && <WarningBox closeDrawer={onClose} customerId={customer?.id} close= {() => setWarnBox(false)} />
       }
       
       <div onClick={onClose} className='fixed inset-0 bg-black/40 z-40 transition-opacity' />

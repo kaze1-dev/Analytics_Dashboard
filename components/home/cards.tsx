@@ -1,9 +1,9 @@
 "use client"
 import React, { useState } from 'react'
-import RevenueStat from './stats/revenueStat'
-import OrderStat from './stats/orderStat'
-import CustomerStat from './stats/customerStat'
-import ProductStat from './stats/productStat'
+import RevenueStat from '../stats/revenueStat'
+import OrderStat from '../stats/orderStat'
+import CustomerStat from '../stats/customerStat'
+import ProductStat from '../stats/productStat'
 import useStats from '@/hooks/useStats'
 
 

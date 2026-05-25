@@ -5,6 +5,6 @@ export async function PATCH (request: NextRequest, { params }: { params: Promise
   return await customerUpdateController(request, {params})
 }
 
-export async function DELETE ({params}: {params: Promise<{id: string}>}) {
-  return await removeCustomerController({params})
+export async function DELETE ( req:NextRequest, {params}: {params: Promise<{id: string}>}) {
+  return await removeCustomerController(req, {params})
 }

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 
 const removeCustomer = async (id: string) => {
-  const response = await fetch(`/api/customer/${id}`, {
+  const response = await fetch(`/api/customers/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json"

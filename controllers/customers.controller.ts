@@ -91,7 +91,7 @@ export const customerDetails = async (req: NextRequest) => {
   }
 }
 
-export const removeCustomerController = async ({ params }: { params: Promise<{ id: string }> }) => {
+export const removeCustomerController = async (req:NextRequest, { params }: { params: Promise<{ id: string }> }) => {
 
   try {
     const { id } = await params;
