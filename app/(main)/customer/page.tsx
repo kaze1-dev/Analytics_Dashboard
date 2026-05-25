@@ -7,7 +7,7 @@ import useCustomerDetails from '@/hooks/useCustomerDetails';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react'
 import { FiChevronRight } from 'react-icons/fi';
-import { HiArrowDown, HiArrowsUpDown, HiArrowUp } from 'react-icons/hi2';
+import { HiArrowDown, HiArrowsUpDown, HiArrowUp, HiChevronDown } from 'react-icons/hi2';
 
 export default function Customers() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -18,9 +18,10 @@ export default function Customers() {
   const size = searchParams.get('size');
   const sortBy = searchParams.get("sortBy") || "name";
   const orderBy = searchParams.get("orderBy") || "asc";
+  const statusFilter = searchParams.get("status") || ''
   const pageNum = Number(page) || 1;
   const sizeNum = Number(size) || 25;
-  const { data: result, isLoading, error } = useCustomerData(pageNum, sizeNum, sortBy, orderBy);
+  const { data: result, isLoading, error } = useCustomerData(pageNum, sizeNum, sortBy, orderBy, statusFilter);
   const handleSort = (columnName: string) => {
     let newOrder = 'asc';
     if (sortBy === columnName) {
@@ -29,6 +30,18 @@ export default function Customers() {
     const params = new URLSearchParams(searchParams.toString());
     params.set('sortBy', columnName);
     params.set('orderBy', newOrder)
+    router.push(`/customer?${params.toString()}`)
+  }
+
+  const handleFilterChange = (newStatus: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (newStatus) {
+      params.set('status', newStatus)
+    } else {
+      params.delete('status');
+    }
+    params.set('page', '1')
     router.push(`/customer?${params.toString()}`)
   }
   const customers = result?.data || []
@@ -61,10 +74,30 @@ export default function Customers() {
                   Track and manage your customers efficiently
                 </p>
               </div>
-              <button onClick={() => setIsOpen(true)} className='bg-indigo-700 px-6 rounded-full py-1 font-bold  text-white/80 flex justify-center items-center gap-2 cursor-pointer'>
+              <div className='flex items-center gap-6'>
+                <div className='flex items-center gap-2'>
+                  <label htmlFor="statusFilter" className='text-xs font-semibold text-neutral-500 uppercase tracking-wider'>
+                    Filter by:
+                  </label>
+                  <div className='relative flex items-center'>
+                    <select value={statusFilter} onChange={(e) => handleFilterChange(e.target.value)} className='appearance-none bg-neutral-900 border border-neutral-800 text-neutral-400 text-sm rounded-xl pl-4 pr-10 py-1.5 font-bold cursor-pointer focus:outline-none focus:border-indigo-500 transition-colors w-40' id="statusFilter">
+                      <option className='bg-neutral-900 text-neutral-400' value="">All Customers</option>
+                      <option className='bg-neutral-900 text-neutral-400' value="active">Active</option>
+                      <option className='bg-neutral-900 text-neutral-400' value="inactive">Inactive</option>
+                      <option className='bg-neutral-900 text-neutral-400' value="lead">Lead</option>
+                      <option className='bg-neutral-900 text-neutral-400' value="pending">Pending</option>
+                    </select>
+                    <div className='absolute right-3 pointer-events-none text-neutral-500'>
+                      <HiChevronDown size={16} />
+                    </div>
+                  </div>
+                </div>
+                <button onClick={() => setIsOpen(true)} className='bg-indigo-700 px-6 rounded-full py-1 font-bold  text-white/80 flex justify-center items-center gap-2 cursor-pointer'>
 
-                <span className='text-2xl'>+</span> New customer
-              </button>
+                  <span className='text-2xl'>+</span> New customer
+                </button>
+
+              </div>
             </div>
             {
               isLoading ? (
