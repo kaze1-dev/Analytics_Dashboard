@@ -61,7 +61,8 @@ export const customerDataController = async (req: NextRequest) => {
     const sortBy = searchParams.get("sortBy") || "name";
     const orderBy = searchParams.get("orderBy") || "asc";
     const status = searchParams.get('status') || '';
-    const customersData = await getCustomerData(page, size, sortBy, orderBy, status);
+    const search = searchParams.get('search') || '';
+    const customersData = await getCustomerData(page, size, sortBy, orderBy, status, search);
     return NextResponse.json(customersData, { status: 200 })
   } catch (error) {
     console.error("Failed to fetch customers data: ", error);

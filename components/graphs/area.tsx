@@ -36,7 +36,7 @@ const SalesChart = () => {
     { label: "1Y", value: "1y" },
   ];
   return (
-    <div className="w-full h-93 bg-neutral-950/40 border border-neutral-800 px-6 pb-12 pt-8 rounded-3xl backdrop-blur-sm">
+    <div className="w-full h-full px-4 pb-10 pt-8 bg-neutral-950/40 border border-neutral-800 rounded-3xl backdrop-blur-sm">
       <div className="flex justify-between items-center mb-8">
         <div>
           <h3 className="text-neutral-200 font-bold text-xl tracking-tight">Revenue Analytics</h3>
@@ -52,7 +52,7 @@ const SalesChart = () => {
           <option value="30d">30d</option>
           <option value="1y">1y</option>
         </select>*/}
-        <div>
+        <div className='flex'>
           {rangeOptions.map((option) => (
             <button
               key={option.value}

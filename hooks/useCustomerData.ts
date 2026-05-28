@@ -10,18 +10,18 @@ interface CustomerResponse {
   }
 }
 
-const fetcher = async (page: number, size: number, sortBy:string, orderBy:string, status:string) => {
-  const res = await fetch(`/api/customers?page=${page}&size=${size}&sortBy=${sortBy}&orderBy=${orderBy}&status=${status}`);
+const fetcher = async (page: number, size: number, sortBy:string, orderBy:string, status:string, search:string) => {
+  const res = await fetch(`/api/customers?page=${page}&size=${size}&sortBy=${sortBy}&orderBy=${orderBy}&status=${status}&search=${search}`);
   if(!res.ok) {
     throw new Error("Failed to fetch customers")
   }
   return res.json()
 }
 
-const useCustomerData = (page: number, size: number, sortBy:string, orderBy:string, status:string) => {
+const useCustomerData = (page: number, size: number, sortBy:string, orderBy:string, status:string, search:string) => {
   return useQuery<CustomerResponse>({
-    queryKey: ['customersData', page, size, sortBy, orderBy, status],
-    queryFn: async () => await fetcher(page,size,sortBy,orderBy,status)
+    queryKey: ['customersData', page, size, sortBy, orderBy, status,search],
+    queryFn: async () => await fetcher(page,size,sortBy,orderBy,status,search)
   })
 }
 

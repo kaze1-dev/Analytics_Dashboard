@@ -44,12 +44,12 @@ const Donut = () => {
 				<div className="border border-neutral-800 rounded-3xl hover:border-neutral-700 transition-all px-5 py-8">
 					<div className="flex justify-between">
 						<div>
-						<h2 className="text-neutral-200 text-xl font-bold tracking-tight">
+						<h2 className="text-neutral-200 text-lg font-bold tracking-tight">
 							Orders Information
 						</h2>
-						<p className="text-neutral-500 text-sm">Track your order status and performance metrics</p>
+						<p className="text-neutral-500 text-xs">Track your order status and performance metrics</p>
 						</div>
-						<div className="">
+						<div className="flex items-center">
 							{frameOptions.map((option) => (
 								<button
 									key={option.value}

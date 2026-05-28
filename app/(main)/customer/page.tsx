@@ -5,8 +5,9 @@ import Pagination from '@/components/pagination';
 import useCustomerData from '@/hooks/useCustomerData';
 import useCustomerDetails from '@/hooks/useCustomerDetails';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useState } from 'react'
-import { FiChevronRight } from 'react-icons/fi';
+import React, { useEffect, useState } from 'react'
+import { FiChevronRight, FiSearch } from 'react-icons/fi';
+import { HiSearch } from 'react-icons/hi';
 import { HiArrowDown, HiArrowsUpDown, HiArrowUp, HiChevronDown } from 'react-icons/hi2';
 
 export default function Customers() {
@@ -19,9 +20,25 @@ export default function Customers() {
   const sortBy = searchParams.get("sortBy") || "name";
   const orderBy = searchParams.get("orderBy") || "asc";
   const statusFilter = searchParams.get("status") || ''
+  const urlSearch = searchParams.get('search') || '';
   const pageNum = Number(page) || 1;
   const sizeNum = Number(size) || 25;
-  const { data: result, isLoading, error } = useCustomerData(pageNum, sizeNum, sortBy, orderBy, statusFilter);
+  const [searchVal, setSearchVal] = useState(urlSearch)
+  const { data: result, isLoading, error } = useCustomerData(pageNum, sizeNum, sortBy, orderBy, statusFilter, urlSearch);
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString())
+
+      if (searchVal) {
+        params.set('search', searchVal);
+      } else {
+        params.delete('search')
+      }
+      params.set('page', '1')
+      router.push(`/customer?${params.toString()}`);
+    }, 500);
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchVal])
   const handleSort = (columnName: string) => {
     let newOrder = 'asc';
     if (sortBy === columnName) {
@@ -75,6 +92,44 @@ export default function Customers() {
                 </p>
               </div>
               <div className='flex items-center gap-6'>
+                {/* <div className='flex items-center gap-2'>
+                  <label htmlFor="statusFilter" className='text-xs font-semibold text-neutral-500 uppercase tracking-wider'>
+                    Filter by:
+                  </label>
+                  <div className='relative flex items-center'>
+                    <select value={statusFilter} onChange={(e) => handleFilterChange(e.target.value)} className='appearance-none bg-neutral-900 border border-neutral-800 text-neutral-400 text-sm rounded-xl pl-4 pr-10 py-1.5 font-bold cursor-pointer focus:outline-none focus:border-indigo-500 transition-colors w-40' id="statusFilter">
+                      <option className='bg-neutral-900 text-neutral-400' value="">All Customers</option>
+                      <option className='bg-neutral-900 text-neutral-400' value="active">Active</option>
+                      <option className='bg-neutral-900 text-neutral-400' value="inactive">Inactive</option>
+                      <option className='bg-neutral-900 text-neutral-400' value="lead">Lead</option>
+                      <option className='bg-neutral-900 text-neutral-400' value="pending">Pending</option>
+                    </select>
+                    <div className='absolute right-3 pointer-events-none text-neutral-500'>
+                      <HiChevronDown size={16} />
+                    </div>
+                  </div>
+                </div> */}
+                <button onClick={() => setIsOpen(true)} className='bg-indigo-700 px-6 rounded-full py-1 font-bold  text-white/80 flex justify-center items-center gap-2 cursor-pointer'>
+
+                  <span className='text-2xl'>+</span> New customer
+                </button>
+
+              </div>
+            </div>
+            <div>
+              <div className='flex items-center justify-between mb-6'>
+                <div className='relative flex items-center  w-64'>
+                  <div className='absolute left-3 text-neutral-500 pointer-events-none'>
+                    <FiSearch />
+                  </div>
+                  <input
+                    type='text'
+                    placeholder='Search name or email...'
+                    value={searchVal}
+                    onChange={(e) => setSearchVal(e.target.value)}
+                    className='bg-neutral-900 border border-neutral-800 text-neutral-300 text-sm rounded-xl pl-10 pr-4 py-1.5 font-medium placeholder-neutral-500 focus:outline-none focus:border-indigo-500 transition-colors w-full'
+                  />
+                </div>
                 <div className='flex items-center gap-2'>
                   <label htmlFor="statusFilter" className='text-xs font-semibold text-neutral-500 uppercase tracking-wider'>
                     Filter by:
@@ -92,11 +147,6 @@ export default function Customers() {
                     </div>
                   </div>
                 </div>
-                <button onClick={() => setIsOpen(true)} className='bg-indigo-700 px-6 rounded-full py-1 font-bold  text-white/80 flex justify-center items-center gap-2 cursor-pointer'>
-
-                  <span className='text-2xl'>+</span> New customer
-                </button>
-
               </div>
             </div>
             {
@@ -110,7 +160,7 @@ export default function Customers() {
                         {/* <th className='pt-6 pb-4'>Customer Id</th> */}
                         <th onClick={() => handleSort('name')} className='py-4 '>
                           <div className='flex items-center gap-2 cursor-pointer'>
-                            Name {sortBy === 'name' ? (orderBy === 'asc' ? <HiArrowUp className='text-indigo-500 stroke-1' /> : <HiArrowDown className='text-indigo-500 stroke-1' />) : <HiArrowsUpDown className='stroke-1' />}
+                            Name {sortBy === 'name' ? (orderBy === 'asc' ? <HiArrowUp size={14} className='text-indigo-500 stroke-1' /> : <HiArrowDown size={14} className='text-indigo-500 stroke-1' />) : <HiArrowsUpDown className='stroke-1' />}
                           </div>
                         </th>
                         <th onClick={() => handleSort('email')} className='py-4 '>

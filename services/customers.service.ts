@@ -61,8 +61,17 @@ export interface CustomerData {
   totalAmount: number
 }
 
-export const getCustomerData = async (page: number = 1, pageSize: number = 25, sortBy:string, orderBy:string, statusFilter?:string) => {
-  let whereClause = statusFilter ? {status: statusFilter} : {}
+export const getCustomerData = async (page: number = 1, pageSize: number = 25, sortBy: string, orderBy: string, statusFilter?: string, searchQuery?: string) => {
+  let whereClause: any = {}
+  if(statusFilter) {
+    whereClause.status = statusFilter
+  }
+  if (searchQuery) {
+    whereClause.OR = [
+      { name: { contains: searchQuery, mode: 'insensitive' } },
+      { email: { contains: searchQuery, mode: 'insensitive' } }
+    ]
+  }
   const skip = (page - 1) * pageSize
   const [customers, totalCount,] = await Promise.all([
     prisma.customer.findMany({
@@ -90,7 +99,7 @@ export const getCustomerData = async (page: number = 1, pageSize: number = 25, s
         [sortBy]: orderBy
       }
     }),
-    prisma.customer.count({where: whereClause}),
+    prisma.customer.count({ where: whereClause }),
   ])
 
   const data: CustomerData[] = customers.map(customer => {
