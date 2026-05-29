@@ -10,11 +10,25 @@ import { HiUsers } from 'react-icons/hi2'
 import { HiSquare3Stack3D } from 'react-icons/hi2'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link';
-
+import { usePathname } from 'next/navigation';
 const Navbar = () => {
-  const {data: session, status} = useSession();
+  const { data: session, status } = useSession();
   const email = session?.user?.email;
   const formattedEmail = email?.split("@")[0] || "user";
+  const pathname = usePathname();
+
+  const mainNavItems = [
+    { name: 'Home', href: '/home', icon: HiHome },
+    { name: 'Customers', href: '/customer', icon: HiUsers },
+    { name: 'Orders', href: '/orders', icon: HiShoppingCart },
+    { name: 'Products', href: '/products', icon: HiSquare3Stack3D },
+    { name: 'Analytics', href: '/analytics', icon: HiChartBar },
+    { name: 'Subscription', href: '/subscription', icon: HiCreditCard },
+  ];
+  const bottomNavItems = [
+    { name: 'Settings', href: '/settings', icon: HiCog },
+    { name: 'Help Center', href: '/help', icon: HiInformationCircle },
+  ]
   return (
     <div className='ml-3'>
       <nav className='bg-neutral-950 w-46 justify-between px-5 fixed top-3 bottom-3 flex flex-col py-5 font-sans rounded-2xl border border-neutral-800 hover:border-neutral-700 transition-all cursor-default'>
@@ -38,52 +52,38 @@ const Navbar = () => {
               </div>
             </div>
           </div>
-          <Link href="/home">
-          <div className='bg-neutral-900 px-2 text-medium rounded-xl py-2 text-neutral-400 text-sm flex items-center gap-2 cursor-pointer hover:bg-neutral-900 mb-1'>
-            <HiHome size={18} />
-            <span className='font-semibold mt-0.5'>Home</span>
-          </div>
-          </Link>
-          <Link href="/customer">
-          <div className='text-sm flex items-center gap-2 font-semibold px-2 py-2 rounded-xl text-neutral-400 mb-1 cursor-pointer hover:bg-neutral-900 transition'>
-            <HiUsers size={18} />
-            <span className='mt-0.5'>Customers</span>
-          </div>
-          </Link>
-          <div className='text-sm flex items-center gap-2 font-semibold px-2 py-2 rounded-xl text-neutral-400 cursor-pointer mb-1 hover:bg-neutral-900 transition'>
-
-            <HiShoppingCart size={18} />
-            <span className='mt-0.5'>Orders</span>
-          </div>
-          <div className='py-1'>
-            <hr className='border-neutral-800' />
-          </div>
-          <div className='text-sm px-2 flex items-center text-medium py-2 rounded-xl text-neutral-400 gap-2 font-semibold cursor-pointer mb-1 hover:bg-neutral-900 transition'>
-            <HiSquare3Stack3D size={18} />
-            <span className='mt-0.5'>Products</span>
-          </div>
-          <div className='text-sm px-2 flex items-center text-medium py-2 rounded-xl text-neutral-400 gap-2 font-semibold cursor-pointer mb-1 hover:bg-neutral-900 transition'>
-            <HiChartBar size={18} />
-            <span className='mt-0.5'>Analytics</span>
-          </div>
-
-          <div className='text-sm flex items-center gap-2 font-semibold px-2 py-2 rounded-xl text-neutral-400 cursor-pointer mb-1 hover:bg-neutral-900 transition'>
-            <HiCreditCard size={18} />
-            <span className='mt-0.5'>Subscription</span>
-          </div>
-
+          {mainNavItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = pathname === item.href;
+            return (
+              <Link key={item.name} href={item.href}>
+                <div
+                  className={`text-sm flex items-center gap-2 font-semibold px-2 py-2 rounded-xl mb-1 cursor-pointer transition-all duration-200 ${isActive ? 'bg-neutral-900 text-indigo-500' : 'text-neutral-400 hover:bg-neutral-900/50 hover:text-neutral-200'}`}
+                >
+                  <Icon size={18} className={isActive ? 'text-indigo-500' : 'text-neutral-400'} />
+                  <span className='mt-0.5'>{item.name}</span>
+                </div>
+              </Link>
+            )
+          })}
         </div>
         <div className='flex flex-col text-sm'>
-          <div className='p-2 flex items-center gap-2 font-semibold text-neutral-400 rounded-xl cursor-pointer mb-1 hover:bg-neutral-900 transition'>
-            <HiCog size={18} />
-            <span className='mt-0.5'>Settings</span>
-          </div>
-          <div className='p-2 flex items-center gap-2 font-semibold text-neutral-400 rounded-xl cursor-pointer mb-1 hover:bg-neutral-900 transition'>
-            <HiInformationCircle size={18} />
-            <span className='mt-0.5'>Help center</span>
-          </div>
-        </div>
+          {bottomNavItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = pathname === item.href;
 
+            return (
+              <Link key={item.href} href={item.href}>
+                <div
+                  className={`text-sm flex items-center gap-2 font-semibold px-2 py-2 rounded-xl mb-1 cursor-pointer transition-all duration-200 ${isActive ? 'bg-neutral-900 text-indigo-500' : 'text-neutral-400 hover:bg-neutral-900/50 hover:text-neutral-200'}`}
+                >
+                  <Icon size={18} className={isActive ? 'text-indigo-500' : 'text-neutral-400'} />
+                  <span className='mt-0.5'>{item.name}</span>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
       </nav>
     </div>
   )
