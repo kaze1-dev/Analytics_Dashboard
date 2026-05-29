@@ -24,21 +24,34 @@ export const getOrderInfo = async (timeFrame: string) => {
   return stats
 }
 
-const getOrders = async (page:number=1, pageSize:number=25) => {
+export const getOrders = async (page:number=1, pageSize:number=25) => {
   const skip = (page - 1) * pageSize;
-  const orders = await prisma.order.findMany({
+  const [orders, totalCount] = await Promise.all([
+    prisma.order.findMany({
     take: pageSize,
     skip: skip,
     select: {
       id: true,
       status: true,
+      totalAmount: true,
       customer: {
         select: {
           name: true,
           phone: true
-        }
+        },
       }
     }
-  })
+  }),
+  prisma.order.count()
+  ])
+ 
+  return {
+    orders,
+    metadata: {
+      totalPages: Math.ceil(totalCount / pageSize),
+      currentPage: page,
+      totalCount
+    }
+  };
 }
 

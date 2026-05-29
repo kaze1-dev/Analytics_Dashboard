@@ -7,7 +7,6 @@ import useCustomerDetails from '@/hooks/useCustomerDetails';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { FiChevronRight, FiSearch } from 'react-icons/fi';
-import { HiSearch } from 'react-icons/hi';
 import { HiArrowDown, HiArrowsUpDown, HiArrowUp, HiChevronDown } from 'react-icons/hi2';
 
 export default function Customers() {
