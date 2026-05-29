@@ -24,3 +24,21 @@ export const getOrderInfo = async (timeFrame: string) => {
   return stats
 }
 
+const getOrders = async (page:number=1, pageSize:number=25) => {
+  const skip = (page - 1) * pageSize;
+  const orders = await prisma.order.findMany({
+    take: pageSize,
+    skip: skip,
+    select: {
+      id: true,
+      status: true,
+      customer: {
+        select: {
+          name: true,
+          phone: true
+        }
+      }
+    }
+  })
+}
+

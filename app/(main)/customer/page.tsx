@@ -92,23 +92,6 @@ export default function Customers() {
                 </p>
               </div>
               <div className='flex items-center gap-6'>
-                {/* <div className='flex items-center gap-2'>
-                  <label htmlFor="statusFilter" className='text-xs font-semibold text-neutral-500 uppercase tracking-wider'>
-                    Filter by:
-                  </label>
-                  <div className='relative flex items-center'>
-                    <select value={statusFilter} onChange={(e) => handleFilterChange(e.target.value)} className='appearance-none bg-neutral-900 border border-neutral-800 text-neutral-400 text-sm rounded-xl pl-4 pr-10 py-1.5 font-bold cursor-pointer focus:outline-none focus:border-indigo-500 transition-colors w-40' id="statusFilter">
-                      <option className='bg-neutral-900 text-neutral-400' value="">All Customers</option>
-                      <option className='bg-neutral-900 text-neutral-400' value="active">Active</option>
-                      <option className='bg-neutral-900 text-neutral-400' value="inactive">Inactive</option>
-                      <option className='bg-neutral-900 text-neutral-400' value="lead">Lead</option>
-                      <option className='bg-neutral-900 text-neutral-400' value="pending">Pending</option>
-                    </select>
-                    <div className='absolute right-3 pointer-events-none text-neutral-500'>
-                      <HiChevronDown size={16} />
-                    </div>
-                  </div>
-                </div> */}
                 <button onClick={() => setIsOpen(true)} className='bg-indigo-700 px-6 rounded-full py-1 font-bold  text-white/80 flex justify-center items-center gap-2 cursor-pointer'>
 
                   <span className='text-2xl'>+</span> New customer

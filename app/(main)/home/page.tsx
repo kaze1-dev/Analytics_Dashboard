@@ -29,7 +29,7 @@ export default function Home() {
    const customers = data?.totalCustomers.toLocaleString()
    const products = data?.productsSold.toLocaleString()
    return (
-      <div className='pl-55  pr-6 cursor-default pb-10'>
+      <div className='pl-55 pr-6 cursor-default pb-10'>
          <div className='my-4 flex justify-between items-center'>
             <h1 className='text-3xl py-4 font-bold text-neutral-200'>
                Home
