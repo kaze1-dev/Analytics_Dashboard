@@ -15,7 +15,7 @@ export const getOrderInfo = async (timeFrame: string) => {
   const stats = await prisma.order.groupBy({
     by: ['status'],
     where: {
-      createdAt: {gte: startDate}
+      createdAt: { gte: startDate }
     },
     _count: {
       status: true
@@ -24,35 +24,42 @@ export const getOrderInfo = async (timeFrame: string) => {
   return stats
 }
 
-export const getOrders = async (page:number=1, pageSize:number=25,   orderBy: string, sortBy: string, statusFilter?: string) => {
+export const getOrders = async (page: number = 1, pageSize: number = 25, orderBy: string, sortBy: string, statusFilter?: string, searchQuery?: string) => {
   const whereClause: any = {}
-  if(statusFilter) {
+  if (statusFilter) {
     whereClause.status = statusFilter
+  }
+  if (searchQuery) {
+    whereClause.OR = [
+      { id: { contains: searchQuery, mode: 'insensitive' } },
+      { customer: { name: { contains: searchQuery, mode: 'insensitive' } } },
+      { customer: { email: { contains: searchQuery, mode: 'insensitive' } } },
+    ]
   }
   const skip = (page - 1) * pageSize;
   const [orders, totalCount] = await Promise.all([
     prisma.order.findMany({
-    take: pageSize,
-    skip: skip,
-    where: whereClause,
-    select: {
-      id: true,
-      status: true,
-      totalAmount: true,
-      customer: {
-        select: {
-          name: true,
-          phone: true
-        },
+      take: pageSize,
+      skip: skip,
+      where: whereClause,
+      select: {
+        id: true,
+        status: true,
+        totalAmount: true,
+        customer: {
+          select: {
+            name: true,
+            phone: true
+          },
+        }
+      },
+      orderBy: {
+        [sortBy]: orderBy
       }
-    },
-    orderBy: {
-      [sortBy]: orderBy
-    }
-  }),
-  prisma.order.count({where: whereClause})
+    }),
+    prisma.order.count({ where: whereClause })
   ])
- 
+
   return {
     orders,
     metadata: {
@@ -96,3 +103,20 @@ export const getOrderById = async (orderId: string) => {
   return order;
 }
 
+export const orderStats = async () => {
+  const [totalOrders, delivered, pending, cancelled, shipped] = await Promise.all([
+    prisma.order.count(),
+    prisma.order.count({ where: { status: 'delivered' } }),
+    prisma.order.count({ where: { status: 'pending' } }),
+    prisma.order.count({ where: { status: 'cancelled' } }),
+    prisma.order.count({ where: { status: 'shipped' } })
+
+  ])
+  return {
+    totalOrders,
+    delivered,
+    pending,
+    cancelled,
+    shipped
+  }
+}

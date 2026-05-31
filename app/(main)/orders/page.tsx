@@ -4,10 +4,12 @@ import Pagination from '@/components/pagination';
 import { useOrderData } from '@/hooks/useOrderData';
 import useOrderDetails from '@/hooks/useOrderDetails';
 import { useSearchParams } from 'next/navigation';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { FiSearch } from 'react-icons/fi';
 import { HiArrowDown, HiArrowsUpDown, HiArrowUp, HiChevronDown } from 'react-icons/hi2';
+import useOrderStats from '@/hooks/useOrderStats';
+import NewOrderPanel from '@/components/order/newOrderPanel';
 
 interface IOrder {
   id: string,
@@ -34,12 +36,29 @@ const Orders = () => {
   const statusFilter = params.get('status') || ''
   const sortBy = params.get('sortBy') || 'createdAt'
   const orderBy = params.get('orderBy') || 'asc'
-  const { data, isLoading, error } = useOrderData(page, size, orderBy, sortBy, statusFilter);
+  const urlSearch = params.get('search') || ''
+  const { data, isLoading, error } = useOrderData(page, size, orderBy, sortBy, statusFilter, urlSearch);
   const { data: orderData, isLoading: orderLoading, error: orderError } = useOrderDetails(selectedOrder as string)
   const orders = data?.orders || [];
   const metadata = data?.metadata || {}
   const totalPages = metadata.totalPages || 0
   const currentPage = metadata.currentPage || 0
+  const [SearchVal, setSearchVal] = useState<string>(urlSearch);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      const paramss = new URLSearchParams(params.toString())
+
+      if (SearchVal) {
+        paramss.set('search', SearchVal);
+      } else {
+        paramss.delete('search')
+      }
+      paramss.set('page', '1')
+      router.push(`/orders?${paramss.toString()}`);
+    }, 500);
+    return () => clearTimeout(delayDebounceFn);
+  }, [SearchVal])
 
   const handleFilterChange = (newStatus: string) => {
     const newParams = new URLSearchParams(params.toString());
@@ -63,25 +82,40 @@ const Orders = () => {
     newParams.set('orderBy', newOrderBy);
     router.push(`/orders?${newParams.toString()}`);
   }
+  const { data: stats, isLoading: isPending, error: statError } = useOrderStats();
   return (
     <div className='pl-55 pr-6 py-10'>
       <div className='grid grid-cols-4 gap-4 mb-10'>
-        <div className='border border-neutral-800 rounded-2xl p-4 hover:border-neutral-700 transition-all'>
-          <h3 className='text-sm font-bold text-white/50 mb-2'>Active Orders</h3>
-          <div className='text-2xl font-bold text-white/80'>1232</div>
-        </div>
-        <div className='border border-neutral-800 rounded-2xl p-4 hover:border-neutral-700 transition-all'>
-          <h3 className='text-sm font-bold text-white/50 mb-2'>Pending Orders</h3>
-          <div className='text-2xl font-bold text-white/80'>456</div>
-        </div>
-        <div className='border border-neutral-800 rounded-2xl p-4 hover:border-neutral-700 transition-all'>
-          <h3 className='text-sm font-bold text-white/50 mb-2'>Completed Orders</h3>
-          <div className='text-2xl font-bold text-white/80'>789</div>
-        </div>
-        <div className='border border-neutral-800 rounded-2xl p-4 hover:border-neutral-700 transition-all'>
-          <h3 className='text-sm font-bold text-white/50 mb-2'>Cancelled Orders</h3>
-          <div className='text-2xl font-bold text-white/80'>123</div>
-        </div>
+        {
+          isPending ? (
+            <>
+              <div className='h-22 rounded-2xl animate-pulse bg-neutral-900' />
+              <div className='h-22 rounded-2xl animate-pulse bg-neutral-900' />
+              <div className='h-22 rounded-2xl animate-pulse bg-neutral-900' />
+              <div className='h-22 rounded-2xl animate-pulse bg-neutral-900' />
+            </>
+          ) : (
+            <>
+              <div className='border border-neutral-800 rounded-2xl px-4 py-3 hover:border-neutral-700 transition-all'>
+                <h3 className='text-sm font-bold text-white/50 mb-2'>Delivered</h3>
+                <div className='text-2xl font-bold text-white/80'>{stats?.delivered}</div>
+              </div>
+              <div className='border border-neutral-800 rounded-2xl px-4 py-3 hover:border-neutral-700 transition-all'>
+                <h3 className='text-sm font-bold text-white/50 mb-2'>Pending</h3>
+                <div className='text-2xl font-bold text-white/80'>{stats?.pending}</div>
+              </div>
+              <div className='border border-neutral-800 rounded-2xl px-4 py-3 hover:border-neutral-700 transition-all'>
+                <h3 className='text-sm font-bold text-white/50 mb-2'>Shipped</h3>
+                <div className='text-2xl font-bold text-white/80'>{stats?.shipped}</div>
+              </div>
+              <div className='border border-neutral-800 rounded-2xl px-4 py-3 hover:border-neutral-700 transition-all'>
+                <h3 className='text-sm font-bold text-white/50 mb-2'>Cancelled</h3>
+                <div className='text-2xl font-bold text-white/80'>{stats?.cancelled}</div>
+              </div>
+            </>
+          )
+        }
+
       </div>
       <div className='flex justify-between items-center'>
         <div>
@@ -89,12 +123,6 @@ const Orders = () => {
           <p className='text-sm text-neutral-500'>
             Track and manage your orders effectively
           </p>
-        </div>
-        <div className='flex items-center gap-6'>
-          <button className='bg-indigo-700 px-6 rounded-full py-1 font-bold  text-white/80 flex justify-center items-center gap-2 cursor-pointer'>
-
-            <span className='text-2xl'>+</span> Add Order
-          </button>
         </div>
       </div>
       <div className='mt-8 mb-4'>
@@ -104,8 +132,10 @@ const Orders = () => {
               <FiSearch />
             </div>
             <input
+              value={SearchVal}
+              onChange={(e) => setSearchVal(e.target.value)}
               type='text'
-              placeholder='Search name or ID...'
+              placeholder='Search Name / ID / Email...'
               className='bg-neutral-900 border border-neutral-800 text-neutral-300 text-sm rounded-xl pl-10 pr-4 py-1.5 font-medium placeholder-neutral-500 focus:outline-none focus:border-indigo-500 transition-colors w-full'
             />
           </div>
