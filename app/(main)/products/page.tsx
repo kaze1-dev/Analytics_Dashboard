@@ -7,6 +7,7 @@ import { HiChevronDown } from 'react-icons/hi2';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Panel from '@/components/products/panel';
 import useProductDetails from '@/hooks/useProductDetails';
+import NewPanel from '@/components/products/newPanel';
 
 const COLORS: any = {
   'Low Stock': 'bg-red-600/10 text-red-600',
@@ -15,6 +16,7 @@ const COLORS: any = {
 }
 const Products = () => {
   const [selectedId, setSelectedId] = useState<string | null | boolean>(null)
+  const [isOpen, setIsOpen] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
   const page = Number(searchParams.get('page')) || 1;
@@ -30,7 +32,7 @@ const Products = () => {
 
   const handleFilterStatus = (newStatus: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    if(newStatus) {
+    if (newStatus) {
       params.set('status', newStatus);
     } else {
       params.delete('status');
@@ -42,7 +44,7 @@ const Products = () => {
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       const params = new URLSearchParams(searchParams.toString());
-      if(searchVal) {
+      if (searchVal) {
         params.set('search', searchVal);
       } else {
         params.delete('search')
@@ -63,7 +65,7 @@ const Products = () => {
           </p>
         </div>
         <div className='flex items-center gap-6'>
-          <button className='bg-indigo-700 px-6 rounded-full py-1 font-bold  text-white/80 flex justify-center items-center gap-2 cursor-pointer'>
+          <button onClick={() => setIsOpen(true)} className='bg-indigo-700 px-6 rounded-full py-1 font-bold  text-white/80 flex justify-center items-center gap-2 cursor-pointer'>
 
             <span className='text-2xl'>+</span> Add a product
           </button>
@@ -156,10 +158,17 @@ const Products = () => {
             <Pagination currentPage={currentPage} totalPages={totalPages} />
             <Panel
               onClose={() => setSelectedId(null)}
-              isOpen = {!!selectedId}
-              product = {productDetail}
-              loading = {isPending}
+              isOpen={!!selectedId}
+              product={productDetail}
+              loading={isPending}
             />
+            {
+              isOpen && <NewPanel
+                open={isOpen}
+                onClose={() => setIsOpen(false)}
+              />
+            }
+
           </div>
         )
       }

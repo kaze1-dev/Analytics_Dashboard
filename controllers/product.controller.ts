@@ -1,4 +1,4 @@
-import { getProductById, getProducts } from "@/services/product.service";
+import { getProductById, getProducts, newProduct } from "@/services/product.service";
 import { NextResponse, NextRequest } from "next/server";
 
 export const getProductsController = async (req: NextRequest) => {
@@ -31,5 +31,19 @@ export const getProductByIdController = async (req: NextRequest, { params }: { p
       message: "Failed to fetch product details",
 
     }, { status: 500 });
+  }
+}
+
+export const newProductController = async (req: NextRequest) => {
+  try {
+    const body = await req.json();
+    const newProductData = await newProduct(body);
+    return NextResponse.json(newProductData, { status: 201 })
+  } catch (error) {
+    console.error("Error creating new Product: ", error);
+    return NextResponse.json({
+      success: false,
+      message: "Failed to create new Product. Please try again later."
+    }, { status: 500 })
   }
 }

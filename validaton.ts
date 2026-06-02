@@ -23,6 +23,13 @@ export const newCustomerSchema = z.object({
 )
 })
 
+export const newProductSchema = z.object({
+  name: z.string().min(3, "Product name must be at least 3 characters"),
+  price: z.number().positive("Price must be a positive number"),
+  stock: z.number().int().nonnegative("Stock must be a non-negative integer")
+})
+
 export type UpdateCustomerInput = z.infer<typeof UpdateCustomerSchema>
 export type NewCustomerInput = z.infer<typeof newCustomerSchema>
+export type NewProductInput = z.infer<typeof newProductSchema>
 export {registerSchema} 
