@@ -24,7 +24,7 @@ const RevenueStat = (props:any) => {
             </div>
           </>
           :
-          <div className='border border-neutral-800 rounded-xl border-solid p-4 hover:border-neutral-700 transition'>
+          <div className='border border-neutral-800 rounded-xl border-solid p-4 hover:border-neutral-700 transition-all'>
 
             <div className='mb-2'>
               <div className='flex items-center gap-4'>

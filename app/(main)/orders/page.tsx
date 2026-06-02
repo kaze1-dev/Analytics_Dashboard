@@ -164,7 +164,7 @@ const Orders = () => {
             <div className='bg-neutral-900 rounded-2xl animate-pulse w-full h-120' />
           </div>
         ) : (
-          <div className='overflow-x-auto border border-neutral-800 px-6 rounded-2xl'>
+          <div className='overflow-x-auto border transition-all border-neutral-800 px-6 rounded-2xl'>
             <table className='w-full overflow-y-scroll'>
               <thead>
                 <tr className='text-neutral-400 text-left border-b border-neutral-700'>

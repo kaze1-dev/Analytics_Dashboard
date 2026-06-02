@@ -112,16 +112,16 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
   return (
     <div>
       {
-        warnBox && <WarningBox closeDrawer={onClose} customerId={customer?.id} close= {() => setWarnBox(false)} />
+        warnBox && <WarningBox closeDrawer={onClose} customerId={customer?.id} close={() => setWarnBox(false)} />
       }
-      
+
       <div onClick={onClose} className='fixed inset-0 bg-black/40 z-40 transition-opacity' />
       <div className='fixed overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden  right-4 top-4 bottom-4 w-100 bg-neutal-900 z-50 bg-neutral-900/10 backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 transition-all px-4 py-4 rounded-2xl'>
         <div className='flex  fixed backdrop-blur-xs left-0 right-0 px-4 bg-neutral-900/10 justify-between items-center mb-10'>
           <h2 className='text-xl text-neutral-200 font-bold'>
             Customer Details
           </h2>
-          {/* <button onClick={onClose} className='text-neutal-600 font-bold'>✕</button> */}
+          <button onClick={onClose} className='text-neutal-600 font-bold cursor-pointer'>✕</button>
         </div>
         {isLoading ? (
           <div className='space-y-4 mt-10'>
@@ -153,7 +153,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                 </div>
                 <div className=''>
                   <div onClick={() => setWarnBox(true)} className=' text-red-600 p-1 rounded cursor-pointer'>
-                  <HiOutlineTrash size={22} />
+                    <HiOutlineTrash size={22} />
                   </div>
                 </div>
               </div>
@@ -312,7 +312,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                 </div>
               </div>
             )}
-              
+
           </div>
         )}
       </div>

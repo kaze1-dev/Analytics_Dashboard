@@ -11,7 +11,7 @@ const CustomerStat = (props: any) => {
         props.loading ?
           <div className='bg-neutral-900 w-full h-28 rounded-lg animate-pulse' />
           :
-          <div className='border border-neutral-800 rounded-xl border-solid hover:border-neutral-700 transition p-4'>
+          <div className='border border-neutral-800 rounded-xl border-solid hover:border-neutral-700 transition-all p-4'>
 
             <div className='mb-2'>
               <div className='flex gap-4 items-center'>

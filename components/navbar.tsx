@@ -23,11 +23,9 @@ const Navbar = () => {
     { name: 'Orders', href: '/orders', icon: HiShoppingCart },
     { name: 'Products', href: '/products', icon: HiSquare3Stack3D },
     { name: 'Analytics', href: '/analytics', icon: HiChartBar },
-    { name: 'Subscription', href: '/subscription', icon: HiCreditCard },
   ];
   const bottomNavItems = [
     { name: 'Settings', href: '/settings', icon: HiCog },
-    { name: 'Help Center', href: '/help', icon: HiInformationCircle },
   ]
   return (
     <div className='ml-3'>
