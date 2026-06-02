@@ -1,7 +1,7 @@
 "use client";
 import Pagination from '@/components/pagination';
 import useProducts from '@/hooks/useProducts';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FiSearch } from 'react-icons/fi';
 import { HiChevronDown } from 'react-icons/hi2';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -20,7 +20,9 @@ const Products = () => {
   const page = Number(searchParams.get('page')) || 1;
   const size = Number(searchParams.get('size')) || 25;
   const statusFilter = searchParams.get('status') || '';
-  const { data, isLoading, error } = useProducts(page, size, statusFilter)
+  const urlSearch = searchParams.get('search') || '';
+  const [searchVal, setSearchVal] = useState<string>(urlSearch)
+  const { data, isLoading, error } = useProducts(page, size, statusFilter, urlSearch)
   const products = data?.products || [];
   const metadata = data?.metadata || {};
   const { totalPages, currentPage } = metadata;
@@ -36,6 +38,21 @@ const Products = () => {
     params.set('page', '1');
     router.push(`/products?${params.toString()}`);
   }
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString());
+      if(searchVal) {
+        params.set('search', searchVal);
+      } else {
+        params.delete('search')
+      }
+      params.set('page', '1');
+      router.push(`/products?${params.toString()}`)
+    }, 500)
+    return () => clearTimeout(delayDebounceFn)
+  }, [searchVal])
+
   return (
     <div className='pl-55 pr-6 py-10'>
       <div className='flex justify-between items-center'>
@@ -60,6 +77,8 @@ const Products = () => {
               <FiSearch />
             </div>
             <input
+              value={searchVal}
+              onChange={(e) => setSearchVal(e.target.value)}
               type='text'
               placeholder='Search Name / ID / Email...'
               className='bg-neutral-900 border border-neutral-800 text-neutral-300 text-sm rounded-xl pl-10 pr-4 py-1.5 font-medium placeholder-neutral-500 focus:outline-none focus:border-indigo-500 transition-colors w-full'

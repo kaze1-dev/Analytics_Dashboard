@@ -7,7 +7,8 @@ export const getProductsController = async (req: NextRequest) => {
     const page = Number(searchParams.get('page')) || 1;
     const size = Number(searchParams.get('size')) || 25;
     const statusFilter = searchParams.get('status') || '';
-    const productsData = await getProducts(page, size, statusFilter);
+    const search = searchParams.get('search') || '';
+    const productsData = await getProducts(page, size, statusFilter, search);
     return NextResponse.json(productsData, { status: 200 })
   } catch (error) {
     console.error("Error fetching products: ", error);
