@@ -1,12 +1,20 @@
-import React from 'react'
-import { HiCube } from 'react-icons/hi2';
+import React, { useState } from 'react'
+import { HiCube, HiOutlineTrash } from 'react-icons/hi2';
+import InfoBox from './infoBox';
 
 const Panel = ({ onClose, isOpen, product, loading }: { onClose: () => void, isOpen: boolean, product: any, loading: boolean }) => {
+  const [infoBox, setInfoBox] = useState(false);
   if (!isOpen) {
     return null
   }
   return (
     <>
+      <InfoBox
+        open={infoBox}
+        onClose={() => setInfoBox(false)}
+        productId={product?.id}
+        mainClose={onClose}
+      />
       <div onClick={onClose} className='fixed inset-0 bg-black/40 z-40 transition-opacity' />
       <div className={`fixed overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden  right-4 top-4 bottom-4 bg-neutal-900 z-50 bg-neutral-900/10 backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 duration-500 transition-all px-4 py-4 rounded-2xl w-96`}>
         <div className='mb-8 flex justify-between items-center'>
@@ -24,9 +32,16 @@ const Panel = ({ onClose, isOpen, product, loading }: { onClose: () => void, isO
           ) : (
             <div>
               <div>
-                <div className='flex justify-center items-center mb-4'>
-                  <div className='bg-neutral-900/60 rounded-full p-4'>
-                    <HiCube size={48} className='text-indigo-500' />
+                <div className='flex flex-col'>
+                  <div className='flex justify-center items-center mb-4'>
+                    <div className='bg-neutral-900/60 rounded-full p-4'>
+                      <HiCube size={48} className='text-indigo-500' />
+                    </div>
+                  </div>
+                  <div onClick={() => setInfoBox(true)} className='flex justify-center items-center mb-4'>
+                    <div className=' text-red-600 p-1 rounded cursor-pointer'>
+                      <HiOutlineTrash size={22} />
+                    </div>
                   </div>
                 </div>
                 <div className='flex justify-around items-center mb-8 border border-neutral-800 rounded-2xl py-3'>
@@ -55,6 +70,7 @@ const Panel = ({ onClose, isOpen, product, loading }: { onClose: () => void, isO
                   <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-3 text-neutral-300 text-sm'>{product?.createdAt}</p>
                 </div>
               </div>
+
             </div>
           )
         }

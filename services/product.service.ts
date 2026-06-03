@@ -76,3 +76,9 @@ export const newProduct = async (data: {
     ...product,
   }
 }
+
+export const deleteProduct = async (productId: string) => {
+  await prisma.product.delete({
+    where: { id: productId }
+  })
+}

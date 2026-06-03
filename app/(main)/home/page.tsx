@@ -29,54 +29,57 @@ export default function Home() {
    const customers = data?.totalCustomers.toLocaleString()
    const products = data?.productsSold.toLocaleString()
    return (
-      <div className='pl-55 pr-6 cursor-default pb-10'>
-         <div className='my-4 flex justify-between items-center'>
-            <h1 className='text-3xl py-4 font-bold text-neutral-200'>
-               Home
-            </h1>
-            <div>
-               {
-                  options.map((option) => (
-                     <button
-                        key={option.value}
-                        onClick={() => setFrame(option.value)}
-                        className={`text-xs px-3 py-1 cursor-pointer font-semibold rounded-lg transition all ${frame === option.value
-                           ? "bg-indigo-500 text-neutral-200"
-                           : "bg-neutral-950 text-neutral-200"
-                           }`}
-                     >
-                        {option.label}
-                     </button>
-                  ))
-               }
+      <div className=''>
+         {/* <div className="w-68 transition-all " /> */}
+         <div className='cursor-default pb-10 pl-4 sm:pl-10 md:pl-55  lg:pl-55  w-full pr-4 sm:pr-10 md:pr-10'>
+            <div className='my-4 flex justify-between items-center'>
+               <h1 className='text-3xl ml-14 sm:ml-14 md:ml-0 lg:ml-0 xl:ml-0 py-4 font-bold text-neutral-200'>
+                  Home
+               </h1>
+               <div>
+                  {
+                     options.map((option) => (
+                        <button
+                           key={option.value}
+                           onClick={() => setFrame(option.value)}
+                           className={`text-xs px-3 py-1 cursor-pointer font-semibold rounded-lg transition all ${frame === option.value
+                              ? "bg-indigo-500 text-neutral-200"
+                              : "bg-neutral-950 text-neutral-200"
+                              }`}
+                        >
+                           {option.label}
+                        </button>
+                     ))
+                  }
+               </div>
             </div>
-         </div>
-         <div className='grid grid-cols-4 gap-4 cursor-default mb-10'>
+            <div className='grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 cursor-default mb-10'>
 
-            <RevenueStat value={revenue} loading={isLoading} />
-            <OrderStat value={orders} loading={isLoading} />
-            <CustomerStat value={customers} loading={isLoading} />
-            <ProductStat value={products} loading={isLoading} />
-
-         </div>
-         <div>
-            <div>
+               <RevenueStat value={revenue} loading={isLoading} />
+               <OrderStat value={orders} loading={isLoading} />
+               <CustomerStat value={customers} loading={isLoading} />
+               <ProductStat value={products} loading={isLoading} />
 
             </div>
-           {/*  <h1 className='text-2xl py-6 font-bold text-neutral-400'>
+            <div>
+               <div>
+
+               </div>
+               {/*  <h1 className='text-2xl py-6 font-bold text-neutral-400'>
                Sales Overview
             </h1> */}
-            <div className="grid grid-cols-2 gap-4 mt-4">
-               <div>
-                  <SalesChart />
+               <div className="grid placeItems-center sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+                  <div className="h-full">
+                     <SalesChart />
+                  </div>
+                  <div>
+                     <Donut />
+                  </div>
                </div>
-               <div>
-                  <Donut />
-               </div>
-            </div>
-            <div className="mt-10">
-               <OrdersTable />
+               <div className="mt-10">
+                  <OrdersTable />
 
+               </div>
             </div>
          </div>
       </div>

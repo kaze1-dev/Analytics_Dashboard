@@ -1,4 +1,4 @@
-import { getProductById, getProducts, newProduct } from "@/services/product.service";
+import { deleteProduct, getProductById, getProducts, newProduct } from "@/services/product.service";
 import { NextResponse, NextRequest } from "next/server";
 
 export const getProductsController = async (req: NextRequest) => {
@@ -44,6 +44,23 @@ export const newProductController = async (req: NextRequest) => {
     return NextResponse.json({
       success: false,
       message: "Failed to create new Product. Please try again later."
+    }, { status: 500 })
+  }
+}
+
+export const deleteProductController = async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+  try {
+    const { id } = await params;
+    await deleteProduct(id);
+    return NextResponse.json({
+      success: true,
+      message: "Product deleted successfully",  
+    }, { status: 200 })
+  } catch (error) {
+    console.error("Error deleting product: ", error);
+    return NextResponse.json({
+      success: false,
+      message: "Failed to delete product. Please try again later."
     }, { status: 500 })
   }
 }

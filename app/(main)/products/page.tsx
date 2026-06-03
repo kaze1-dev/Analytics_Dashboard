@@ -8,6 +8,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Panel from '@/components/products/panel';
 import useProductDetails from '@/hooks/useProductDetails';
 import NewPanel from '@/components/products/newPanel';
+import InfoBox from '@/components/products/infoBox';
 
 const COLORS: any = {
   'Low Stock': 'bg-red-600/10 text-red-600',
@@ -162,12 +163,11 @@ const Products = () => {
               product={productDetail}
               loading={isPending}
             />
-            {
-              isOpen && <NewPanel
-                open={isOpen}
-                onClose={() => setIsOpen(false)}
-              />
-            }
+            <NewPanel
+              open={isOpen}
+              onClose={() => setIsOpen(false)}
+            />
+            
 
           </div>
         )

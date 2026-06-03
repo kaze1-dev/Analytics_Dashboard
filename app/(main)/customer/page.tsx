@@ -7,7 +7,7 @@ import useCustomerDetails from '@/hooks/useCustomerDetails';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { FiChevronRight, FiSearch } from 'react-icons/fi';
-import { HiArrowDown, HiArrowsUpDown, HiArrowUp, HiChevronDown } from 'react-icons/hi2';
+import { HiArrowDown, HiArrowsUpDown, HiArrowUp, HiChevronDoubleRight, HiChevronDown } from 'react-icons/hi2';
 
 export default function Customers() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -75,30 +75,29 @@ export default function Customers() {
   return (
     <>
 
-      <div className='pl-55 pr-6 pb-10'>
+      <div className='cursor-default pb-10 pl-4 sm:pl-10 md:pl-55  lg:pl-55  w-full pr-4 sm:pr-10 md:pr-10'>
 
 
         <>
           <div>
-            <div className='flex justify-between items-center my-8'>
+            <div className='flex justify-between items-center pt-6'>
 
-              <div className='flex flex-col'>
+              <div className='flex flex-col ml-14 sm:ml-14 md:ml-0 lg:ml-0 xl:ml-0 font-bold'>
                 <h1 className='text-3xl text-neutral-200 font-bold'>
                   Customers
                 </h1>
-                <p className='text-sm text-neutral-400'>
+                <p className='text-sm text-neutral-400 hidden sm:hidden md:block'>
                   Track and manage your customers efficiently
                 </p>
               </div>
               <div className='flex items-center gap-6'>
-                <button onClick={() => setIsOpen(true)} className='bg-indigo-700 px-6 rounded-full py-1 font-bold  text-white/80 flex justify-center items-center gap-2 cursor-pointer'>
-
-                  <span className='text-2xl'>+</span> New customer
+                <button onClick={() => setIsOpen(true)} className='bg-indigo-700 px-6 rounded-full py-1 font-bold  text-white/80 flex justify-center items-center gap-2 cursor-pointer '>
+                  <span className='text-2xl'>+</span> <span className='hidden sm:hidden md:block lg:block'>New customer</span>
                 </button>
 
               </div>
             </div>
-            <div>
+            <div className='mt-8'>
               <div className='flex items-center justify-between mb-6'>
                 <div className='relative flex items-center  w-64'>
                   <div className='absolute left-3 text-neutral-500 pointer-events-none'>
@@ -179,10 +178,7 @@ export default function Customers() {
                             <td className='font-bold py-6 text-center text-white/80 '>
                               <div className='flex ml-3'>
                                 <div className='text-indigo-500'>
-                                  <FiChevronRight size={18} />
-                                </div>
-                                <div className='text-indigo-500'>
-                                  <FiChevronRight size={18} />
+                                  <HiChevronDoubleRight size={18} />
                                 </div>
                               </div>
                             </td>

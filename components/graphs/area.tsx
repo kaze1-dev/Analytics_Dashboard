@@ -36,7 +36,7 @@ const SalesChart = () => {
     { label: "1Y", value: "1y" },
   ];
   return (
-    <div className="w-full h-full px-4 pb-10 pt-8 bg-neutral-950/40 border border-neutral-800 rounded-3xl backdrop-blur-sm">
+    <div className="w-84 sm:w-full md:w-full lg:w-full h-100 sm:h-100 md:h-100 lg:h-full xl:h-full px-4 pb-10 pt-8 bg-neutral-950/40 border border-neutral-800 rounded-3xl backdrop-blur-sm ">
       <div className="flex justify-between items-center mb-8">
         <div>
           <h3 className="text-neutral-200 font-bold text-xl tracking-tight">Revenue Analytics</h3>
@@ -75,7 +75,7 @@ const SalesChart = () => {
             <div className="h-8 w-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer>
             <AreaChart data={data} margin={{ top: 5, right: 5, left: -8, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">

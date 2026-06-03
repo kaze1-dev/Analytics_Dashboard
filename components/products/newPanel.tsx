@@ -19,7 +19,12 @@ const NewPanel = ({ open, onClose }: { open: boolean, onClose: () => void }) => 
   }
   const {mutate, isPending} = useCreateProduct();
   const handleSubmit = () => {
-    const result = newProductSchema.safeParse(formData);
+    const parsedData = {
+      name: formData.name,
+      price: formData.price === '' ? undefined : Number(formData.price),
+      stock: formData.stock === '' ? undefined : Number(formData.stock),
+    };
+    const result = newProductSchema.safeParse(parsedData);
     if(!result.success) {
       const fieldErrors: any = {};
       result.error.issues.forEach((err) => {
@@ -33,11 +38,15 @@ const NewPanel = ({ open, onClose }: { open: boolean, onClose: () => void }) => 
     setErrors({})
     mutate(result.data, {
       onSuccess: () => {
-        console.log("Product created successfully!"),
+        console.log("Product created successfully!");
         onClose()
+      },
+      onError: (error) => {
+        console.log("Error creating product: ", error)
       }
     })
   }
+  if(!open) return null;
   return (
     <>
       <div onClick={onClose} className='fixed inset-0 bg-black/40 z-40 transition-opacity' />
@@ -64,9 +73,12 @@ const NewPanel = ({ open, onClose }: { open: boolean, onClose: () => void }) => 
             </div>
           </div>
           <div className='mt-36'>
-            <button className='bg-indigo-600 w-full py-3 rounded-2xl font-bold text-white/80 hover:bg-indigo-500 transition-all duration-300'>
+            <button onClick={handleSubmit} className='bg-indigo-600 w-full py-3 rounded-2xl font-bold text-white/80 cursor-pointer hover:bg-indigo-500 transition-all duration-300'>
               Create Product
             </button>
+          </div>
+          <div>
+            {isPending && <span className='border-3 border-r-0 border-b-0 animate-spin absolute inset-0 m-auto border-indigo-600 w-10 h-10 rounded-full'></span>}
           </div>
         </div>
       </div>

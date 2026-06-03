@@ -40,7 +40,7 @@ const Donut = () => {
 	/* const total = data.reduce((sum, item) => sum + item.value, 0) */
 	return (
 		<>
-			<div className="w-full">
+			<div className="w-84 sm:w-full md:w-full lg:w-full xl:w-full">
 				<div className="border border-neutral-800 rounded-3xl hover:border-neutral-700 transition-all px-5 py-8">
 					<div className="flex justify-between">
 						<div>
@@ -72,7 +72,7 @@ const Donut = () => {
 							</div>
 						) : (
 							<>
-								<ResponsiveContainer width="100%" height="100%">
+								<ResponsiveContainer>
 									<PieChart>
 										<Tooltip
 											contentStyle={{
@@ -103,7 +103,7 @@ const Donut = () => {
 								</div>
 
 
-								<div className="flex gap-10 justify-center text-xs">
+								<div className=" gap-10 justify-center text-xs hidden sm:hidden md:flex lg:flex xl:flex">
 									<div className="flex gap-1 items-center">
 										<span className="bg-[#22c55e] h-4 w-4 rounded"></span>
 										<p className="text-neutral-400 font-bold">Delivered</p>

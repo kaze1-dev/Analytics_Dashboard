@@ -2,7 +2,11 @@ import React from 'react'
 
 const Settings = () => {
   return (
-    <div className='pl-63 pt-10'>Welcome to Settings page</div>
+    <div className='pl-63'>
+      <div className='flex justify-center items-center h-screen'>
+        <h2 className=' border border-neutral-800 hover:border-neutral-700 transition-all p-4 font-bold text-white/70 text-lg rounded-xl cursor-default'>In Progess too</h2>
+      </div>
+    </div>
   )
 }
 
