@@ -80,13 +80,13 @@ export default function Customers() {
 
         <>
           <div>
-            <div className='flex justify-between items-center pt-6'>
+            <div className='flex justify-between items-center pt-7.5'>
 
               <div className='flex flex-col ml-14 sm:ml-14 md:ml-0 lg:ml-0 xl:ml-0 font-bold'>
                 <h1 className='text-3xl text-neutral-200 font-bold'>
                   Customers
                 </h1>
-                <p className='text-sm text-neutral-400 hidden sm:hidden md:block'>
+                <p className='text-sm text-neutral-400 hidden sm:hidden md:hidden lg:block'>
                   Track and manage your customers efficiently
                 </p>
               </div>
@@ -98,12 +98,13 @@ export default function Customers() {
               </div>
             </div>
             <div className='mt-8'>
-              <div className='flex items-center justify-between mb-6'>
-                <div className='relative flex items-center  w-64'>
+              <div className='flex flex-col sm:flex-col md:flex-row gap-4 justify-start items-center mb-6'>
+                <div className='relative flex items-center w-full sm:w-full md:w-100'>
                   <div className='absolute left-3 text-neutral-500 pointer-events-none'>
                     <FiSearch />
                   </div>
                   <input
+                    name='searchs'
                     type='text'
                     placeholder='Search name or email...'
                     value={searchVal}
@@ -111,7 +112,7 @@ export default function Customers() {
                     className='bg-neutral-900 border border-neutral-800 text-neutral-300 text-sm rounded-xl pl-10 pr-4 py-1.5 font-medium placeholder-neutral-500 focus:outline-none focus:border-indigo-500 transition-colors w-full'
                   />
                 </div>
-                <div className='flex items-center gap-2'>
+                <div className='flex items-center w-full justify-end gap-2'>
                   <label htmlFor="statusFilter" className='text-xs font-semibold text-neutral-500 uppercase tracking-wider'>
                     Filter by:
                   </label>
@@ -144,7 +145,7 @@ export default function Customers() {
                             Name {sortBy === 'name' ? (orderBy === 'asc' ? <HiArrowUp size={14} className='text-indigo-500 stroke-1' /> : <HiArrowDown size={14} className='text-indigo-500 stroke-1' />) : <HiArrowsUpDown className='stroke-1' />}
                           </div>
                         </th>
-                        <th onClick={() => handleSort('email')} className='py-4 '>
+                        <th onClick={() => handleSort('email')} className='py-4 hidden lg:block '>
                           <div className='flex items-center gap-2 cursor-pointer'>
                             Email {sortBy === 'email' ? (orderBy === 'asc' ? <HiArrowUp className='text-indigo-500 stroke-1' /> : <HiArrowDown className='text-indigo-500 stroke-1' />) : <HiArrowsUpDown className='stroke-1' />}
                           </div>
@@ -169,8 +170,8 @@ export default function Customers() {
                           >
                             {/* <td className='font-bold py-6 text-neutral-400'>{customer.id.slice(-4).toUpperCase()}</td> */}
                             <td className='font-bold py-6 text-white/80'>{customer.name}</td>
-                            <td className='font-bold py-6 text-white/80'>{customer.email}</td>
-                            <td className={`font-bold py-6 text-white/80 pr-15`}>
+                            <td className='font-bold py-6 hidden lg:block text-white/80'>{customer.email}</td>
+                            <td className={`font-bold py-6 text-white/80 pr-8`}>
                               <span className={`text-xs font-bold px-3  py-1 rounded-xl ${Colors[customer.status]}`}>
                                 {customer.status}
                               </span>

@@ -44,10 +44,10 @@ const Donut = () => {
 				<div className="border border-neutral-800 rounded-3xl hover:border-neutral-700 transition-all px-5 py-8">
 					<div className="flex justify-between">
 						<div>
-						<h2 className="text-neutral-200 text-lg font-bold tracking-tight">
+						<h2 className="text-white/80 text-lg font-bold tracking-tight">
 							Orders Information
 						</h2>
-						<p className="text-neutral-500 text-xs">Track your order status and performance metrics</p>
+						<p className="text-white/50 text-sm hidden xl:block">Track your order status and performance metrics</p>
 						</div>
 						<div className="flex items-center">
 							{frameOptions.map((option) => (
@@ -103,20 +103,20 @@ const Donut = () => {
 								</div>
 
 
-								<div className=" gap-10 justify-center text-xs hidden sm:hidden md:flex lg:flex xl:flex">
-									<div className="flex gap-1 items-center">
+								<div className=" gap-10 justify-center text-xs hidden sm:hidden md:flex lg:hidden xl:flex">
+									<div className="flex gap-1 text-xs items-center">
 										<span className="bg-[#22c55e] h-4 w-4 rounded"></span>
 										<p className="text-neutral-400 font-bold">Delivered</p>
 									</div>
-									<div className="flex gap-1 items-center">
+									<div className="flex gap-1 text-xs items-center">
 										<span className="bg-[#6366f1] h-4 w-4 rounded"></span>
 										<p className="text-neutral-400 font-bold">Shipped</p>
 									</div>
-									<div className="flex gap-1 items-center">
+									<div className="flex gap-1 text-xs items-center">
 										<span className="bg-[#f59e0b] h-4 w-4 rounded"></span>
 										<p className="text-neutral-400 font-bold">Pending</p>
 									</div>
-									<div className="flex gap-1 items-center">
+									<div className="flex gap-1 text-xs items-center">
 										<span className="bg-[#525252] h-4 w-4 rounded"></span>
 										<p className="text-neutral-400 font-bold">Cancelled</p>
 									</div>

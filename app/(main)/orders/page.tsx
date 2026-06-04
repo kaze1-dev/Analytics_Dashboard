@@ -84,8 +84,8 @@ const Orders = () => {
   }
   const { data: stats, isLoading: isPending, error: statError } = useOrderStats();
   return (
-    <div className='pl-55 pr-6 py-10'>
-      <div className='grid grid-cols-4 gap-4 mb-10'>
+    <div className='cursor-default pb-10 pl-4 sm:pl-10 md:pl-55  lg:pl-55  w-full pr-4 sm:pr-10 md:pr-10'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10 mt-18 md:mt-10'>
         {
           isPending ? (
             <>
@@ -126,8 +126,8 @@ const Orders = () => {
         </div>
       </div>
       <div className='mt-8 mb-4'>
-        <div className='flex items-center justify-between'>
-          <div className='relative flex items-center w-64'>
+        <div className='flex flex-col sm:flex-col md:flex-row gap-4 justify-start items-center mb-6'>
+          <div className='relative flex items-center w-full sm:w-full md:w-100'>
             <div className='absolute left-3 text-neutral-500 pointer-events-none'>
               <FiSearch />
             </div>
@@ -139,7 +139,7 @@ const Orders = () => {
               className='bg-neutral-900 border border-neutral-800 text-neutral-300 text-sm rounded-xl pl-10 pr-4 py-1.5 font-medium placeholder-neutral-500 focus:outline-none focus:border-indigo-500 transition-colors w-full'
             />
           </div>
-          <div className='flex items-center gap-2'>
+          <div className='flex items-center w-full justify-end gap-2'>
             <label htmlFor="statusFilter" className='text-xs font-semibold text-neutral-500 uppercase tracking-wider'>
               Filter by:
             </label>
@@ -184,7 +184,7 @@ const Orders = () => {
                       Status {sortBy === 'status' ? (orderBy === 'asc' ? <HiArrowUp /> : <HiArrowDown />) : <HiArrowsUpDown className='stroke-1' />}
                     </div>
                   </th>
-                  <th className='py-4 cursor-default'>
+                  <th className='py-4 cursor-default hidden md:block'>
                     Actions
                   </th>
                 </tr>
@@ -192,13 +192,13 @@ const Orders = () => {
               <tbody>
                 {orders.map((order: IOrder) => (
                   <tr onClick={() => setSelectedOrder(order.id)} key={order.id} className='border-b border-neutral-800 hover:bg-neutral-900/50 transition-colors cursor-pointer '>
-                    <td className='py-5 uppercase font-bold text-sm text-white/80'>...{order.id.slice(-4)}</td>
-                    <td className='py-5 text-white/80 font-semibold text-sm'>{order.customer.name}</td>
-                    <td className={`py-5 font-bold text-sm `}>
+                    <td className='py-5 uppercase font-bold text-xs sm:text-sm text-white/80'>...{order.id.slice(-4)}</td>
+                    <td className='py-5 text-white/80 font-semibold text-xs sm:text-sm'>{order.customer.name}</td>
+                    <td className={`py-5 font-bold text-xs sm:text-sm`}>
                       <span className={`${Colors[order.status]} px-4 py-1 rounded-xl`}>{order.status}</span>
 
                     </td>
-                    <td className='py-5'>
+                    <td className='py-5 hidden md:block'>
                       <button className='text-indigo-500 text-sm hover:text-indigo-400'>
                         View
                       </button>

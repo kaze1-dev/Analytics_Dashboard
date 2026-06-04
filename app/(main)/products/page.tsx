@@ -57,25 +57,24 @@ const Products = () => {
   }, [searchVal])
 
   return (
-    <div className='pl-55 pr-6 py-10'>
-      <div className='flex justify-between items-center'>
-        <div>
+    <div className='cursor-default pb-10 pl-4 sm:pl-10 md:pl-55  lg:pl-55  w-full pr-4 sm:pr-10 md:pr-10'>
+      <div className='flex justify-between items-center mb-10 mt-8'>
+        <div className='flex flex-col ml-14 sm:ml-14 md:ml-0 lg:ml-0 xl:ml-0 font-bold'>
           <h1 className='text-3xl font-semibold text-white/80'>Products</h1>
-          <p className='text-sm text-neutral-500'>
+          <p className='text-sm text-neutral-500 hidden sm:hidden md:hidden lg:block'>
             Track and manage your Products effectively
           </p>
         </div>
-        <div className='flex items-center gap-6'>
-          <button onClick={() => setIsOpen(true)} className='bg-indigo-700 px-6 rounded-full py-1 font-bold  text-white/80 flex justify-center items-center gap-2 cursor-pointer'>
+       <div className='flex items-center gap-6'>
+                <button onClick={() => setIsOpen(true)} className='bg-indigo-700 px-6 rounded-full py-1 font-bold  text-white/80 flex justify-center items-center gap-2 cursor-pointer '>
+                  <span className='text-2xl'>+</span> <span className='hidden sm:hidden md:block lg:block'>New Product</span>
+                </button>
 
-            <span className='text-2xl'>+</span> Add a product
-          </button>
-
-        </div>
+              </div>
       </div>
       <div className='mt-8 mb-4'>
-        <div className='flex items-center justify-between'>
-          <div className='relative flex items-center w-64'>
+        <div className='flex flex-col sm:flex-col md:flex-row gap-4 justify-start items-center mb-6'>
+          <div className='relative flex items-center w-full sm:w-full md:w-100'>
             <div className='absolute left-3 text-neutral-500 pointer-events-none'>
               <FiSearch />
             </div>
@@ -87,7 +86,7 @@ const Products = () => {
               className='bg-neutral-900 border border-neutral-800 text-neutral-300 text-sm rounded-xl pl-10 pr-4 py-1.5 font-medium placeholder-neutral-500 focus:outline-none focus:border-indigo-500 transition-colors w-full'
             />
           </div>
-          <div className='flex items-center gap-2'>
+          <div className='flex items-center w-full justify-end gap-2'>
             <label htmlFor="statusFilter" className='text-xs font-semibold text-neutral-500 uppercase tracking-wider'>
               Filter by:
             </label>
@@ -113,25 +112,25 @@ const Products = () => {
               <thead>
                 <tr className='text-neutral-400 text-left border-b border-neutral-700'>
                   {/* <th className='pt-6 pb-4'>Customer Id</th> */}
-                  <th /* onClick={() => handleSort('id')} */ className='py-4 '>
+                  <th /* onClick={() => handleSort('id')} */ className='py-4 hidden md:block'>
                     <div className='flex items-center gap-2 cursor-pointer'>
                       Product ID {/* {sortBy === 'id' ? (orderBy === 'asc' ? <HiArrowUp /> : <HiArrowDown />) : <HiArrowsUpDown className='stroke-1' />} */}
                     </div>
                   </th>
                   <th className='py-4 '>
                     <div className='flex items-center gap-2 cursor-pointer'>
-                      Product   Name
+                      Name
                     </div>
                   </th>
                   <th /* onClick={() => handleSort('status')}  */ className='py-4 '>
-                    <div className='flex items-center gap-2 cursor-pointer'>
+                    <div className='flex items-center gap-2 cursor-pointer '>
                       Status {/* {sortBy === 'status' ? (orderBy === 'asc' ? <HiArrowUp /> : <HiArrowDown />) : <HiArrowsUpDown className='stroke-1' />} */}
                     </div>
                   </th>
-                  <th className='py-4 cursor-default'>
+                  <th className='py-4 cursor-default hidden sm:block'>
                     Price
                   </th>
-                  <th className='py-4 pl-10 cursor-default'>
+                  <th className='py-4 cursor-default hidden'>
                     Action
                   </th>
                 </tr>
@@ -139,15 +138,15 @@ const Products = () => {
               <tbody>
                 {products.map((product: any) => (
                   <tr onClick={() => setSelectedId(product.id)} key={product.id} className='border-b border-neutral-800 hover:bg-neutral-900/50 transition-colors cursor-pointer '>
-                    <td className='py-5 uppercase font-bold text-sm text-white/80'>...{product.id.slice(-4)}</td>
+                    <td className='py-5 uppercase font-bold text-sm text-white/80 hidden md:block'>...{product.id.slice(-4)}</td>
                     <td className='py-5 text-white/80 font-semibold text-sm'>{product.name}</td>
-                    <td className={`py-5 font-bold text-sm `}>
+                    <td className={`py-5 font-bold text-xs `}>
                       <span className={` rounded-xl  px-4 py-1 ${COLORS[product.status]}`}>{product.status}</span>
                     </td>
-                    <td className={`py-5 font-bold text-sm `}>
+                    <td className={`py-5 font-bold text-sm hidden sm:block`}>
                       <span className={`rounded-xl`}>{product.price}</span>
                     </td>
-                    <td className='py-5 pl-10'>
+                    <td className='py-5 hidden'>
                       <button className='text-indigo-500 text-sm hover:text-indigo-400'>
                         View
                       </button>

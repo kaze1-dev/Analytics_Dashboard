@@ -39,8 +39,8 @@ const SalesChart = () => {
     <div className="w-84 sm:w-full md:w-full lg:w-full h-100 sm:h-100 md:h-100 lg:h-full xl:h-full px-4 pb-10 pt-8 bg-neutral-950/40 border border-neutral-800 rounded-3xl backdrop-blur-sm ">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h3 className="text-neutral-200 font-bold text-xl tracking-tight">Revenue Analytics</h3>
-          <p className="text-neutral-500 text-sm">Performance metrics for the selected period</p>
+          <h3 className="text-white/80 font-bold text-xl tracking-tight">Revenue Analytics</h3>
+          <p className="text-white/50 text-sm hidden xl:block">Performance metrics for the selected period</p>
         </div>
         
         {/* <select 
