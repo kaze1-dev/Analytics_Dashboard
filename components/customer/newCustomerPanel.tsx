@@ -71,7 +71,7 @@ const CustomerPanel = ({ isOpen, closed }: CustomerPanel) => {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '100%', opacity: 0 }}
             transition={{type: 'spring', damping: 26, stiffness: 220, duration: 0.15}}
-            className='bg-neutral-900/10  backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 rounded-2xl fixed right-4 top-4 bottom-4 w-100 px-4 py-4 overflow-y-scroll [scrollbar-width:none] [-ms-overflow-styles:none] [$::-webkit-scrollbar]:hidden z-50'>
+            className='bg-neutral-900/10  backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 rounded-2xl fixed right-4 top-4 bottom-4  w-82 sm:w-96 px-4 py-4 overflow-y-scroll [scrollbar-width:none] [-ms-overflow-styles:none] [$::-webkit-scrollbar]:hidden z-50'>
             <div className='mb-6 flex justify-between items-center'>
               <h2 className='text-2xl  font-bold text-neutral-200'>
                 Add Customer

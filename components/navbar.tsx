@@ -10,6 +10,7 @@ import { useSession } from 'next-auth/react'
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import MenuDrawer from './menuDrawer';
+import { AnimatePresence } from 'framer-motion';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session, status } = useSession();
@@ -92,7 +93,12 @@ const Navbar = () => {
           </button>
         </div>
       </div>
-      <MenuDrawer isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <AnimatePresence>
+        {
+          isMenuOpen && <MenuDrawer isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+        }
+
+      </AnimatePresence>
     </div>
   )
 }

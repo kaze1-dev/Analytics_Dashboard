@@ -123,7 +123,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
       <motion.div initial={{ x: '100%', opacity: 0.5 }}
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: '100%', opacity: 0 }}
-        transition={{type: 'spring', damping: 26, stiffness: 220, duration: 0.15}} className='fixed overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden  right-4 top-4 bottom-4 w-100 bg-neutal-900 z-50 bg-neutral-900/10 backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 px-4 py-4 rounded-2xl'>
+        transition={{type: 'spring', damping: 26, stiffness: 220, duration: 0.15}} className='fixed overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden  right-4 top-4 bottom-4  w-82 sm:w-96 bg-neutal-900 z-50 bg-neutral-900/10 backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 px-4 py-4 rounded-2xl'>
         <div className='flex  fixed backdrop-blur-xs left-0 right-0 px-4 bg-neutral-900/10 justify-between items-center mb-10'>
           <h2 className='text-xl text-neutral-200 font-bold'>
             Customer Details
