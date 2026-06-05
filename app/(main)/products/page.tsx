@@ -9,6 +9,7 @@ import Panel from '@/components/products/panel';
 import useProductDetails from '@/hooks/useProductDetails';
 import NewPanel from '@/components/products/newPanel';
 import InfoBox from '@/components/products/infoBox';
+import { AnimatePresence } from 'framer-motion';
 
 const COLORS: any = {
   'Low Stock': 'bg-red-600/10 text-red-600',
@@ -65,12 +66,12 @@ const Products = () => {
             Track and manage your Products effectively
           </p>
         </div>
-       <div className='flex items-center gap-6'>
-                <button onClick={() => setIsOpen(true)} className='bg-indigo-700 px-6 rounded-full py-1 font-bold  text-white/80 flex justify-center items-center gap-2 cursor-pointer '>
-                  <span className='text-2xl'>+</span> <span className='hidden sm:hidden md:block lg:block'>New Product</span>
-                </button>
+        <div className='flex items-center gap-6'>
+          <button onClick={() => setIsOpen(true)} className='bg-indigo-700 px-6 rounded-full py-1 font-bold  text-white/80 flex justify-center items-center gap-2 cursor-pointer '>
+            <span className='text-2xl'>+</span> <span className='hidden sm:hidden md:block lg:block'>New Product</span>
+          </button>
 
-              </div>
+        </div>
       </div>
       <div className='mt-8 mb-4'>
         <div className='flex flex-col sm:flex-col md:flex-row gap-4 justify-start items-center mb-6'>
@@ -156,22 +157,32 @@ const Products = () => {
               </tbody>
             </table>
             <Pagination currentPage={currentPage} totalPages={totalPages} />
-            <Panel
-              onClose={() => setSelectedId(null)}
-              isOpen={!!selectedId}
-              product={productDetail}
-              loading={isPending}
-            />
-            <NewPanel
-              open={isOpen}
-              onClose={() => setIsOpen(false)}
-            />
-            
+
+
 
           </div>
         )
       }
+      <AnimatePresence>
+        {
+          selectedId && <Panel
+            onClose={() => setSelectedId(null)}
+            isOpen={!!selectedId}
+            product={productDetail}
+            loading={isPending}
+          />
+        }
 
+      </AnimatePresence>
+      <AnimatePresence>
+        {
+          isOpen && <NewPanel
+            open={isOpen}
+            onClose={() => setIsOpen(false)}
+          />
+        }
+
+      </AnimatePresence>
     </div>
   )
 }

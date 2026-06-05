@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { FiSearch } from 'react-icons/fi';
 import { HiArrowDown, HiArrowsUpDown, HiArrowUp, HiChevronDown } from 'react-icons/hi2';
 import useOrderStats from '@/hooks/useOrderStats';
-import NewOrderPanel from '@/components/order/newOrderPanel';
+import { AnimatePresence } from 'framer-motion';
 
 interface IOrder {
   id: string,
@@ -208,15 +208,21 @@ const Orders = () => {
               </tbody>
             </table>
             <Pagination currentPage={currentPage} totalPages={totalPages} />
-            <OrderPanel
-              isOpen={!!selectedOrder}
-              onClose={() => setSelectedOrder(null)}
-              order={orderData}
-              loading={orderLoading}
-            />
+
           </div>
         )
       }
+      <AnimatePresence>
+        {
+          selectedOrder && <OrderPanel
+            isOpen={!!selectedOrder}
+            onClose={() => setSelectedOrder(null)}
+            order={orderData}
+            loading={orderLoading}
+          />
+        }
+
+      </AnimatePresence>
 
     </div>
   )

@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { HiLocationMarker } from 'react-icons/hi';
 import { HiCheck, HiOutlineTrash, HiPencilSquare, HiUserCircle, HiXMark } from 'react-icons/hi2';
 import WarningBox from './warningBox';
+import { motion } from "framer-motion"
 
 interface Props {
   isOpen: boolean;
@@ -98,9 +99,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
       })
     }
   }, [customer, isOpen])
-  if (!isOpen) {
-    return null
-  }
+
 
   const Colors: any = {
     active: 'bg-green-600/20 text-green-600',
@@ -115,8 +114,16 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
         warnBox && <WarningBox closeDrawer={onClose} customerId={customer?.id} close={() => setWarnBox(false)} />
       }
 
-      <div onClick={onClose} className='fixed inset-0 bg-black/40 z-40 transition-opacity' />
-      <div className='fixed overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden  right-4 top-4 bottom-4 w-100 bg-neutal-900 z-50 bg-neutral-900/10 backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 transition-all px-4 py-4 rounded-2xl'>
+      <motion.div
+        initial={{opacity: 0}}
+        animate={{opacity: 1}}
+        exit={{opacity: 0}}
+        onClick={onClose}
+        className='fixed inset-0 bg-black/40 z-40 transition-opacity' />
+      <motion.div initial={{ x: '100%', opacity: 0.5 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: '100%', opacity: 0 }}
+        transition={{type: 'spring', damping: 26, stiffness: 220, duration: 0.15}} className='fixed overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden  right-4 top-4 bottom-4 w-100 bg-neutal-900 z-50 bg-neutral-900/10 backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 px-4 py-4 rounded-2xl'>
         <div className='flex  fixed backdrop-blur-xs left-0 right-0 px-4 bg-neutral-900/10 justify-between items-center mb-10'>
           <h2 className='text-xl text-neutral-200 font-bold'>
             Customer Details
@@ -315,7 +322,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
 
           </div>
         )}
-      </div>
+      </motion.div>
     </div>
   )
 }

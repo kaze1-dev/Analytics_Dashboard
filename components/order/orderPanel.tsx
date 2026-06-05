@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { HiCube } from 'react-icons/hi';
+import { motion } from "framer-motion"
 
 
 interface IOrder {
@@ -23,12 +24,23 @@ interface IOrder {
 }
 
 const OrderPanel = ({ isOpen, onClose, order, loading }: { isOpen: boolean, onClose: () => void, order: IOrder, loading: boolean }) => {
-  if (!isOpen) return null;
+
 
   return (
     <>
-      <div onClick={onClose} className='fixed inset-0 bg-black/40 z-40 transition-opacity' />
-      <div className={`fixed overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden  right-4 top-4 bottom-4 bg-neutal-900 z-50 bg-neutral-900/10 backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 duration-500 transition-all px-4 py-4 rounded-2xl w-96`}>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        onClick={onClose}
+        className='fixed inset-0 bg-black/40 z-40 transition-opacity' />
+      <motion.div
+        initial={{x: '100%', opacity: 0.5}}
+        animate={{x: 0, opacity: 1}}
+        exit={{x: '100%', opacity: 0}}
+        transition={{type: 'spring', damping: 26, stiffness: 220, duration: 0.15}}
+        className={`fixed overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden  right-4 top-4 bottom-4 bg-neutal-900 z-50 bg-neutral-900/10 backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 px-4 py-4 rounded-2xl w-96`}>
         <div className='mb-8 flex justify-between items-center'>
           <h1 className=''>
             Order Details
@@ -105,7 +117,7 @@ const OrderPanel = ({ isOpen, onClose, order, loading }: { isOpen: boolean, onCl
           )
         }
 
-      </div>
+      </motion.div>
 
     </>
   )

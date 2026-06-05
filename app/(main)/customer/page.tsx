@@ -4,6 +4,7 @@ import CustomerPanel from '@/components/customer/newCustomerPanel';
 import Pagination from '@/components/pagination';
 import useCustomerData from '@/hooks/useCustomerData';
 import useCustomerDetails from '@/hooks/useCustomerDetails';
+import { AnimatePresence } from 'framer-motion';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { FiChevronRight, FiSearch } from 'react-icons/fi';
@@ -190,21 +191,31 @@ export default function Customers() {
                       }
                     </tbody>
                   </table>
-                  <CustomDrawer
-                    isOpen={!!selectedId}
-                    onClose={() => setSelectedId(null)}
-                    customer={customerDetails}
-                    isLoading={isPending}
-                  />
-                  <CustomerPanel
-                    isOpen={isOpen}
-                    closed={() => setIsOpen(false)}
-                  />
+
                   <Pagination totalPages={totalPages} currentPage={currentPage} />
                 </div>
               )
             }
+            <AnimatePresence>
+              {
+                selectedId && <CustomDrawer
+                  isOpen={!!selectedId}
+                  onClose={() => setSelectedId(null)}
+                  customer={customerDetails}
+                  isLoading={isPending}
+                />
+              }
 
+            </AnimatePresence>
+            <AnimatePresence>
+              {
+                isOpen && <CustomerPanel
+                  isOpen={isOpen}
+                  closed={() => setIsOpen(false)}
+                />
+              }
+
+            </AnimatePresence>
           </div>
         </>
 
