@@ -1,8 +1,16 @@
+import { authOptions } from '@/auth';
 import { Aperture } from 'lucide-react'
+import { getServerSession } from 'next-auth';
 import Link from 'next/link'
+import { redirect } from 'next/navigation';
 import React from 'react'
 
-const Dash = () => {
+
+const Dash = async () => {
+  const session = await getServerSession(authOptions);
+  if(session) {
+    redirect('/home')
+  }
   return (
     <div className='h-screen flex justify-center items-center'>
       <div className=' transition-all rounded-xl px-20 pb-15 pt-10 flex flex-col jsutify-center items-center gap-4 '>
