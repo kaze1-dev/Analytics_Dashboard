@@ -16,7 +16,7 @@ const InfoBox = ({ open, onClose, productId, mainClose }: { open: boolean, onClo
   return (
    <>
        <div onClick={onClose} className='fixed bg-black/40 z-40 transition-opacity' />
-      <div className='z-100 fixed inset-0 flex justify-center items-center'>
+      <div className='z-100 fixed inset-0 flex justify-center items-center px-3'>
         <div className='relative'>
           <div className='bg-neutral-950/10 border border-neutral-800  backdrop-blur-xs p-4 rounded-xl'>
             <div className='flex items-center gap-2'>

@@ -97,20 +97,20 @@ const Orders = () => {
           ) : (
             <>
               <div className='border border-neutral-800 rounded-2xl px-4 py-3 hover:border-neutral-700 transition-all'>
-                <h3 className='text-sm font-bold text-white/50 mb-2'>Delivered</h3>
-                <div className='text-2xl font-bold text-white/80'>{stats?.delivered}</div>
+                <h3 className='text-xs sm:text-sm font-bold text-white/50 mb-2'>Delivered</h3>
+                <div className='text-xl sm:text-2xl font-bold text-white/80'>{stats?.delivered}</div>
               </div>
               <div className='border border-neutral-800 rounded-2xl px-4 py-3 hover:border-neutral-700 transition-all'>
-                <h3 className='text-sm font-bold text-white/50 mb-2'>Pending</h3>
-                <div className='text-2xl font-bold text-white/80'>{stats?.pending}</div>
+                <h3 className='text-xs sm:text-sm font-bold text-white/50 mb-2'>Pending</h3>
+                <div className='text-xl sm:text-2xl font-bold text-white/80'>{stats?.pending}</div>
               </div>
               <div className='border border-neutral-800 rounded-2xl px-4 py-3 hover:border-neutral-700 transition-all'>
-                <h3 className='text-sm font-bold text-white/50 mb-2'>Shipped</h3>
-                <div className='text-2xl font-bold text-white/80'>{stats?.shipped}</div>
+                <h3 className='text-xs sm:text-sm font-bold text-white/50 mb-2'>Shipped</h3>
+                <div className='text-xl sm:text-2xl font-bold text-white/80'>{stats?.shipped}</div>
               </div>
               <div className='border border-neutral-800 rounded-2xl px-4 py-3 hover:border-neutral-700 transition-all'>
-                <h3 className='text-sm font-bold text-white/50 mb-2'>Cancelled</h3>
-                <div className='text-2xl font-bold text-white/80'>{stats?.cancelled}</div>
+                <h3 className='text-xs sm:text-sm font-bold text-white/50 mb-2'>Cancelled</h3>
+                <div className='text-xl sm:text-2xl font-bold text-white/80'>{stats?.cancelled}</div>
               </div>
             </>
           )
@@ -119,7 +119,7 @@ const Orders = () => {
       </div>
       <div className='flex justify-between items-center'>
         <div>
-          <h1 className='text-3xl font-semibold text-white/80'>Orders</h1>
+          <h1 className='text-2xl font-bold text-white/80'>Orders</h1>
           <p className='text-sm text-neutral-500'>
             Track and manage your orders effectively
           </p>
@@ -167,11 +167,11 @@ const Orders = () => {
           <div className='overflow-x-auto border transition-all border-neutral-800 px-6 rounded-2xl'>
             <table className='w-full overflow-y-scroll'>
               <thead>
-                <tr className='text-neutral-400 text-left border-b border-neutral-700'>
+                <tr className='text-neutral-400 text-left border-b text-sm sm:text-base border-neutral-700'>
                   {/* <th className='pt-6 pb-4'>Customer Id</th> */}
-                  <th onClick={() => handleSort('id')} className='py-4 '>
+                  <th onClick={() => handleSort('id')} className='py-4 px-2 '>
                     <div className='flex items-center gap-2 cursor-pointer'>
-                      Order ID {sortBy === 'id' ? (orderBy === 'asc' ? <HiArrowUp /> : <HiArrowDown />) : <HiArrowsUpDown className='stroke-1' />}
+                       ID {sortBy === 'id' ? (orderBy === 'asc' ? <HiArrowUp /> : <HiArrowDown />) : <HiArrowsUpDown className='stroke-1' />}
                     </div>
                   </th>
                   <th className='py-4 '>

@@ -19,7 +19,7 @@ const CustomerStat = (props: any) => {
                   <UsersRound className='text-indigo-500' />
                 </div> */}
                 <div>
-                  <h4 className='text-white/50 text-sm font-bold'>
+                  <h4 className='text-white/50 text-xs sm:text-sm font-bold'>
                     Total Customers
                   </h4>
                 </div>
@@ -27,7 +27,7 @@ const CustomerStat = (props: any) => {
 
             </div>
             <div className=''>
-              <h1 className='text-2xl font-bold text-white/80'>
+              <h1 className='text-xl sm:text-2xl font-bold text-white/80'>
                 {props.value}
               </h1>
             </div>

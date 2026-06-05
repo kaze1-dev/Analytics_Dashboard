@@ -39,7 +39,7 @@ const SalesChart = () => {
     <div className="w-84 sm:w-full md:w-full lg:w-full h-100 sm:h-100 md:h-100 lg:h-full xl:h-full px-4 pb-10 pt-8 bg-neutral-950/40 border border-neutral-800 rounded-3xl backdrop-blur-sm ">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h3 className="text-white/80 font-bold text-xl tracking-tight">Revenue Analytics</h3>
+          <h3 className="text-white/80 font-bold text-lg sm:text-xl tracking-tight">Revenue Analytics</h3>
           <p className="text-white/50 text-sm hidden xl:block">Performance metrics for the selected period</p>
         </div>
         
@@ -59,7 +59,7 @@ const SalesChart = () => {
               onClick={() => setRange(option.value)}
               className={`text-xs px-3 py-1 cursor-pointer font-bold rounded-lg transition-all ${
                 range === option.value
-                  ? "bg-indigo-500 text-neutral-200"
+                  ? "bg-indigo-600 text-neutral-200"
                   : "bg-neutral-950 text-neutral-200"}`}
             >
               {option.label}

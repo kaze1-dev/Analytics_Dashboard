@@ -33,7 +33,7 @@ export default function Home() {
          {/* <div className="w-68 transition-all " /> */}
          <div className='cursor-default pb-10 pl-4 sm:pl-10 md:pl-55  lg:pl-55  w-full pr-4 sm:pr-10 md:pr-10'>
             <div className='my-4 flex justify-between items-center'>
-               <h1 className='text-3xl ml-14 sm:ml-14 md:ml-0 lg:ml-0 xl:ml-0 py-4 font-bold text-neutral-200'>
+               <h1 className='text-2xl md:text-3xl ml-14 sm:ml-14 md:ml-0 lg:ml-0 xl:ml-0 py-4 font-bold text-neutral-200'>
                   Home
                </h1>
                <div>
@@ -43,7 +43,7 @@ export default function Home() {
                            key={option.value}
                            onClick={() => setFrame(option.value)}
                            className={`text-xs px-3 py-1 cursor-pointer font-semibold rounded-lg transition all ${frame === option.value
-                              ? "bg-indigo-500 text-neutral-200"
+                              ? "bg-indigo-600 text-neutral-200"
                               : "bg-neutral-950 text-neutral-200"
                               }`}
                         >
@@ -53,7 +53,7 @@ export default function Home() {
                   }
                </div>
             </div>
-            <div className='grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 cursor-default mb-10'>
+            <div className='grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 cursor-default mb-10'>
 
                <RevenueStat value={revenue} loading={isLoading} />
                <OrderStat value={orders} loading={isLoading} />

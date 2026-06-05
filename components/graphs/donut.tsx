@@ -41,7 +41,7 @@ const Donut = () => {
 	return (
 		<>
 			<div className="w-84 sm:w-full md:w-full lg:w-full xl:w-full">
-				<div className="border border-neutral-800 rounded-3xl hover:border-neutral-700 transition-all px-5 py-8">
+				<div className="border border-neutral-800 rounded-3xl hover:border-neutral-700 transition-all px-3 py-8">
 					<div className="flex justify-between">
 						<div>
 						<h2 className="text-white/80 text-lg font-bold tracking-tight">
@@ -55,7 +55,7 @@ const Donut = () => {
 									key={option.value}
 									onClick={() => setFrame(option.value)}
 									className={`text-xs text-neutral-200 px-3 py-1 cursor-pointer font-bold rounded-lg transition-all ${frame === option.value
-											? "bg-indigo-500 text-neutral-200"
+											? "bg-indigo-600 text-neutral-200"
 											: "bg-neutral-950 text-neutral-200"
 										}`}
 								>

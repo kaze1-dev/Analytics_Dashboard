@@ -125,10 +125,10 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
         exit={{ x: '100%', opacity: 0 }}
         transition={{type: 'spring', damping: 26, stiffness: 220, duration: 0.15}} className='fixed overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden  right-4 top-4 bottom-4  w-82 sm:w-96 bg-neutal-900 z-50 bg-neutral-900/10 backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 px-4 py-4 rounded-2xl'>
         <div className='flex  fixed backdrop-blur-xs left-0 right-0 px-4 bg-neutral-900/10 justify-between items-center mb-10'>
-          <h2 className='text-xl text-neutral-200 font-bold'>
+          <h2 className='text-lg md:text-xl text-neutral-200 font-bold'>
             Customer Details
           </h2>
-          <button onClick={onClose} className='text-neutal-600 font-bold cursor-pointer'>✕</button>
+          <button onClick={onClose} className='text-neutral-300 font-bold cursor-pointer'>✕</button>
         </div>
         {isLoading ? (
           <div className='space-y-4 mt-10'>
@@ -136,19 +136,19 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
             <div className='h-4 bg-neutral-800 animate-pulse rounded w-1/2'></div>
           </div>
         ) : (
-          <div className='mt-10'>
+          <div className='mt-16'>
             <div className='cursor-default' >
               <div className='flex justify-between'>
                 <div className='flex items-center gap-2 mb-6'>
-                  <HiUserCircle size={50} className='text-indigo-500' />
+                  <HiUserCircle size={50} className='text-indigo-600' />
                   <div className='flex flex-col gap-1'>
                     <h2 className='flex items-center gap-2'>
-                      <span className='text-xl font-bold text-neutral-300'>
+                      <span className='text-sm sm:text-lg font-bold text-neutral-300'>
                         {
                           nameLength >= 18 ? `${customer?.name.substring(0, 18)}...` : customer?.name
                         }
                       </span>
-                      <span className='text-2xl text-neutral-300'>&middot;</span>
+                      <span className=' text-neutral-300'>&middot;</span>
                       <span className={`${Colors[customer?.status!]} font-bold rounded-full px-3 py-2 text-xs`}>{customer?.status}</span>
                     </h2>
                     <p className='text-xs flex items-center gap-1 font-semibold text-neutral-400'>
@@ -164,7 +164,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                   </div>
                 </div>
               </div>
-              <div className='flex w-full justify-between px-10 py-4 border border-neutral-800 rounded-2xl hover:border-neutral-700 transition-all'>
+              <div className='flex w-full justify-between px-10 mt-3 py-4 border border-neutral-800 rounded-2xl hover:border-neutral-700 transition-all'>
                 <div className='flex flex-col gap-1'>
                   <h2 className='font-bold text-xl text-neutral-200'>
                     ${totalAmount}
@@ -190,12 +190,12 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
             </div>
             <div className='relative my-2'>
               <hr className='text-neutral-800' />
-              <div className={`absolute top-0 h-0.5 bg-indigo-500 transition-all duration-300 ${activeTab === 'Information' ? 'w-1/2 left-0' : 'w-1/2 left-1/2'}`} />
+              <div className={`absolute top-0 h-0.5 bg-indigo-600 transition-all duration-300 ${activeTab === 'Information' ? 'w-1/2 left-0' : 'w-1/2 left-1/2'}`} />
             </div>
             {activeTab === 'Information' ? (
               <div className='cursor-default'>
                 <div onClick={() => setEditMode(true)} className='flex justify-end mt-6'>
-                  <HiPencilSquare size={18} className={`text-indigo-500 ${editMode ? 'hidden' : ''} cursor-pointer`} />
+                  <HiPencilSquare size={18} className={`text-indigo-600 ${editMode ? 'hidden' : ''} cursor-pointer`} />
                 </div>
                 <div className='relative'>
                   <div className='mt-6 flex flex-col gap-2'>
@@ -255,7 +255,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                   </div>
                   {
                     isPending ?
-                      <div className='border-3 border-b-0 animate-spin border-r-0 h-10 w-10 rounded-full border-indigo-500 absolute inset-0 m-auto'></div> :
+                      <div className='border-3 border-b-0 animate-spin border-r-0 h-10 w-10 rounded-full border-indigo-600 absolute inset-0 m-auto'></div> :
                       <div></div>
                   }
 
@@ -263,7 +263,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                 <div className='mt-4'>
                   {
                     editMode ? (
-                      <div className='flex text-indigo-500 font-bold justify-center items-center gap-10 w-full'>
+                      <div className='flex text-indigo-600 font-bold justify-center items-center gap-10 w-full'>
                         <div onClick={handleSave} className='cursor-pointer'>
                           <HiCheck size={20} className='stroke-4' />
                         </div>
@@ -310,7 +310,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                           {item.product.name}
                         </span>
                         <span className='text-neutral-500 text-xs'>x{item.quantity}</span>
-                        <span className='text-indigo-500 font-bold'>
+                        <span className='text-indigo-600 font-bold'>
                           ${item.price}
                         </span>
                       </div>

@@ -59,9 +59,9 @@ const Products = () => {
 
   return (
     <div className='cursor-default pb-10 pl-4 sm:pl-10 md:pl-55  lg:pl-55  w-full pr-4 sm:pr-10 md:pr-10'>
-      <div className='flex justify-between items-center mb-10 mt-8'>
+      <div className='flex justify-between items-center mb-10 mt-7'>
         <div className='flex flex-col ml-14 sm:ml-14 md:ml-0 lg:ml-0 xl:ml-0 font-bold'>
-          <h1 className='text-3xl font-semibold text-white/80'>Products</h1>
+          <h1 className='text-2xl md:text-3xl font-semibold text-white/80'>Products</h1>
           <p className='text-sm text-neutral-500 hidden sm:hidden md:hidden lg:block'>
             Track and manage your Products effectively
           </p>
@@ -111,7 +111,7 @@ const Products = () => {
           <div className='overflow-x-auto border border-neutral-800 transition-all px-6 rounded-2xl'>
             <table className='w-full overflow-y-scroll '>
               <thead>
-                <tr className='text-neutral-400 text-left border-b border-neutral-700'>
+                <tr className='text-neutral-400 text-left text-sm sm:text-base border-b border-neutral-700'>
                   {/* <th className='pt-6 pb-4'>Customer Id</th> */}
                   <th /* onClick={() => handleSort('id')} */ className='py-4 hidden md:block'>
                     <div className='flex items-center gap-2 cursor-pointer'>
@@ -138,17 +138,17 @@ const Products = () => {
               </thead>
               <tbody>
                 {products.map((product: any) => (
-                  <tr onClick={() => setSelectedId(product.id)} key={product.id} className='border-b border-neutral-800 hover:bg-neutral-900/50 transition-colors cursor-pointer '>
-                    <td className='py-5 uppercase font-bold text-sm text-white/80 hidden md:block'>...{product.id.slice(-4)}</td>
-                    <td className='py-5 text-white/80 font-semibold text-sm'>{product.name}</td>
+                  <tr onClick={() => setSelectedId(product.id)} key={product.id} className='border-b border-neutral-800 hover:bg-neutral-900/50 transition-colors cursor-pointer text-xs sm:text-sm '>
+                    <td className='py-5 uppercase font-bold text-white/80 hidden md:block'>...{product.id.slice(-4)}</td>
+                    <td className='py-5 text-white/80 font-semibold '>{product.name}</td>
                     <td className={`py-5 font-bold text-xs `}>
                       <span className={` rounded-xl  px-4 py-1 ${COLORS[product.status]}`}>{product.status}</span>
                     </td>
-                    <td className={`py-5 font-bold text-sm hidden sm:block`}>
+                    <td className={`py-5 font-bold hidden sm:block`}>
                       <span className={`rounded-xl`}>{product.price}</span>
                     </td>
                     <td className='py-5 hidden'>
-                      <button className='text-indigo-500 text-sm hover:text-indigo-400'>
+                      <button className='text-indigo-500 hover:text-indigo-400'>
                         View
                       </button>
                     </td>

@@ -84,7 +84,7 @@ export default function Customers() {
             <div className='flex justify-between items-center pt-7.5'>
 
               <div className='flex flex-col ml-14 sm:ml-14 md:ml-0 lg:ml-0 xl:ml-0 font-bold'>
-                <h1 className='text-3xl text-neutral-200 font-bold'>
+                <h1 className='text-2xl md:text-3xl text-neutral-200 font-bold'>
                   Customers
                 </h1>
                 <p className='text-sm text-neutral-400 hidden sm:hidden md:hidden lg:block'>
@@ -147,7 +147,7 @@ export default function Customers() {
                           </div>
                         </th>
                         <th onClick={() => handleSort('email')} className='py-4 hidden lg:block '>
-                          <div className='flex items-center gap-2 cursor-pointer'>
+                          <div className='flex items-center gap-2  cursor-pointer'>
                             Email {sortBy === 'email' ? (orderBy === 'asc' ? <HiArrowUp className='text-indigo-500 stroke-1' /> : <HiArrowDown className='text-indigo-500 stroke-1' />) : <HiArrowsUpDown className='stroke-1' />}
                           </div>
                         </th>
@@ -166,7 +166,7 @@ export default function Customers() {
                         customers.map((customer) => (
                           <tr
                             key={customer.id}
-                            className='border-b text-left text-neutral-300 text-sm border-neutral-800 last:border-none cursor-pointer hover:bg-neutral-900 transition-all rounded-full'
+                            className='border-b text-left text-neutral-300 text-xs border-neutral-800 last:border-none cursor-pointer hover:bg-neutral-900 transition-all rounded-full'
                             onClick={() => setSelectedId(customer.id)}
                           >
                             {/* <td className='font-bold py-6 text-neutral-400'>{customer.id.slice(-4).toUpperCase()}</td> */}
