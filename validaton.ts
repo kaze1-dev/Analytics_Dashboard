@@ -17,7 +17,7 @@ export const newCustomerSchema = z.object({
   email: z.email("InValid email Address").trim().toLowerCase(),
   phone: z.string().min(10, "Phone number is too short"),
   address: z.string().min(5, "Please provide a full address"),
- status: z.string().refine(
+ status: z.string().toLowerCase().refine(
   (val) => ["active", "inactive", "lead", "pending"].includes(val),
   { message: "Please select a valid status" }
 )

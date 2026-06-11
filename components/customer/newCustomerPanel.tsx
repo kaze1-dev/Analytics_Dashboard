@@ -1,8 +1,9 @@
 import useDeleteCustomer from '@/hooks/useDeleteCustomer';
 import useNewCustomer from '@/hooks/useNewCustomer';
 import { NewCustomerInput, newCustomerSchema } from '@/validaton';
-import React, { useState } from 'react'
-import { motion } from "framer-motion"
+import React, { useEffect, useState } from 'react'
+import { AnimatePresence, motion } from "framer-motion"
+import { HiCheck, HiXMark } from 'react-icons/hi2';
 
 interface CustomerPanel {
   isOpen: boolean | undefined
@@ -18,6 +19,8 @@ const CustomerPanel = ({ isOpen, closed }: CustomerPanel) => {
     address: '',
     status: ''
   })
+  const [messageBox, setMessageBox] = useState<boolean>(false)
+  const [errorBox, setErrorBox] = useState<boolean>(false)
   const { mutate, isPending } = useNewCustomer()
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -44,72 +47,128 @@ const CustomerPanel = ({ isOpen, closed }: CustomerPanel) => {
       {
         onSuccess: () => {
           console.log("New customer Created successfully!")
-          closed()
+          setMessageBox(true);
+          closed();
+
+        },
+        onError: () => {
+          setErrorBox(true)
+          closed();
         }
       }
     )
   }
 
-  const { mutate: run, isPending: loading } = useDeleteCustomer();
+  useEffect(() => {
+    if (messageBox) {
+      const timer = setTimeout(() => {
+        setMessageBox(false)
+      }, 2000);
+      return () => clearTimeout(timer)
+    }
+  }, [messageBox])
+
+  useEffect(() => {
+    if (errorBox) {
+      const timer = setTimeout(() => {
+        setErrorBox(false);
+      }, 2000);
+      return () => clearTimeout(timer)
+    }
+  }, [errorBox]);
+
 
   return (
 
     <>
 
+      <AnimatePresence>
+        {
+          messageBox && (
+            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className='fixed bottom-5 right-10 flex gap-4 items-center bg-neutral-950 border border-neutral-800 rounded-xl px-8 py-4 z-60'>
+              <HiCheck className='stroke-3 text-green-500' size={26} />
+              <p className='text-white/60 font-bold text-lg'>
+                Customer Updated Successfully!
+              </p>
+            </motion.div>
+          )
+        }
 
-      <div>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.1 }}
-          onClick={closed}
-          className='fixed inset-0 bg-black/40 z-40 transition-opacity' />
-        <div className='relative'>
-          <motion.div
-            initial={{ x: '100%', opacity: 0.5 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: '100%', opacity: 0 }}
-            transition={{type: 'spring', damping: 26, stiffness: 220, duration: 0.15}}
-            className='bg-neutral-900/10  backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 rounded-2xl fixed right-4 top-4 bottom-4  w-82 sm:w-96 px-4 py-4 overflow-y-scroll [scrollbar-width:none] [-ms-overflow-styles:none] [$::-webkit-scrollbar]:hidden z-50'>
-            <div className='mb-6 flex justify-between items-center'>
-              <h2 className='text-2xl  font-bold text-neutral-200'>
-                Add Customer
-              </h2>
-              <button onClick={closed} className='text-neutal-600 font-bold cursor-pointer'>✕</button>
-            </div>
+        {
+          errorBox && (
+            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className='fixed bottom-5 right-10 flex gap-4 items-center bg-neutral-950 border border-neutral-800 rounded-xl px-8 py-4 z-60'>
+              <HiXMark className='stroke-3 text-red-500' size={26} />
+              <p className='text-white/60 font-bold text-lg'>
+                Something Went Wrong. Please Try again later.
+              </p>
+            </motion.div>
+          )
+        }
+
+      </AnimatePresence>
+      <AnimatePresence>
+        {
+          isOpen && (
             <div>
-              <div className='flex flex-col gap-2 mb-8'>
-                <h4 className='text-xs text-neutral-400 font-bold'>Name</h4>
-                <input onChange={handleChange} name='name' className='w-full rounded-xl px-4 py-2 border border-neutral-800 text-sm' type="text" placeholder='Enter Name' />
-              </div>
-              <div className='flex flex-col gap-2 mb-8'>
-                <h4 className='text-xs text-neutral-400 font-bold'>Email</h4>
-                <input onChange={handleChange} name='email' className='w-full rounded-xl px-4 py-2 border border-neutral-800 text-sm' type="email" placeholder='Enter Email' />
-              </div>
-              <div className='flex flex-col gap-2 mb-8'>
-                <h4 className='text-xs text-neutral-400 font-bold'>Phone number</h4>
-                <input onChange={handleChange} name='phone' className='w-full rounded-xl px-4 py-2 border border-neutral-800 text-sm' type="text" placeholder='Enter Phone no.' />
-              </div>
-              <div className='flex flex-col gap-2 mb-8'>
-                <h4 className='text-xs text-neutral-400 font-bold'>Address</h4>
-                <input onChange={handleChange} name='address' className='w-full rounded-xl px-4 py-2 border border-neutral-800 text-sm' type="text" placeholder='Enter address' />
-              </div>
-              <div className='flex flex-col gap-2 mb-8'>
-                <h4 className='text-xs text-neutral-400 font-bold'>Status</h4>
-                <input onChange={handleChange} name='status' className='w-full rounded-xl px-4 py-2 border border-neutral-800 text-sm' type="text" placeholder='active / inactive / lead / pending' />
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+                onClick={closed}
+                className='fixed inset-0 bg-black/40 z-40 transition-opacity' />
+              <div className='relative'>
+                <motion.div
+                  initial={{ x: '100%', opacity: 0.5 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: '100%', opacity: 0 }}
+                  transition={{ type: 'spring', damping: 26, stiffness: 220, duration: 0.15 }}
+                  className='bg-neutral-900/10  backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 rounded-2xl fixed right-4 top-4 bottom-4  w-82 sm:w-96 px-4 py-4 overflow-y-scroll [scrollbar-width:none] [-ms-overflow-styles:none] [$::-webkit-scrollbar]:hidden z-50'>
+                  <div className='mb-6 flex justify-between items-center'>
+                    <h2 className='text-2xl  font-bold text-neutral-200'>
+                      Add Customer
+                    </h2>
+                    <button onClick={closed} className='text-neutal-600 font-bold cursor-pointer'>✕</button>
+                  </div>
+                  <div>
+                    <div className='flex flex-col gap-2 mb-8'>
+                      <h4 className='text-xs text-neutral-400 font-bold'>Name</h4>
+                      <input onChange={handleChange} name='name' className='w-full rounded-xl px-4 py-2 border border-neutral-800 text-sm' type="text" placeholder='Enter Name' />
+                      {errors.name && <span className='text-red-500 text-xs'>{errors.name}</span>}
+                    </div>
+                    <div className='flex flex-col gap-2 mb-8'>
+                      <h4 className='text-xs text-neutral-400 font-bold'>Email</h4>
+                      <input onChange={handleChange} name='email' className='w-full rounded-xl px-4 py-2 border border-neutral-800 text-sm' type="email" placeholder='Enter Email' />
+                      {errors.email && <span className='text-red-600 text-xs'>{errors.email}</span>}
+                    </div>
+                    <div className='flex flex-col gap-2 mb-8'>
+                      <h4 className='text-xs text-neutral-400 font-bold'>Phone number</h4>
+                      <input onChange={handleChange} name='phone' className='w-full rounded-xl px-4 py-2 border border-neutral-800 text-sm' type="text" placeholder='Enter Phone no.' />
+                      {errors.phone && <span className='text-red-600 text-xs'>{errors.phone}</span>}
+                    </div>
+                    <div className='flex flex-col gap-2 mb-8'>
+                      <h4 className='text-xs text-neutral-400 font-bold'>Address</h4>
+                      <input onChange={handleChange} name='address' className='w-full rounded-xl px-4 py-2 border border-neutral-800 text-sm' type="text" placeholder='Enter address' />
+                      {errors.address && <span className='text-red-600 text-xs'>{errors.address}</span>}
+                    </div>
+                    <div className='flex flex-col gap-2 mb-8'>
+                      <h4 className='text-xs text-neutral-400 font-bold'>Status</h4>
+                      <input onChange={handleChange} name='status' className='w-full rounded-xl px-4 py-2 border border-neutral-800 text-sm' type="text" placeholder='active / inactive / lead / pending' />
+                      {errors.status && <span className='text-red-600 text-xs'>{errors.status}</span>}
+                    </div>
+                  </div>
+                  <div className='flex justify-center pb-4  items-center'>
+                    <button onClick={handleSave} className='bg-indigo-600 w-full cursor-pointer py-1 rounded-xl'>
+                      Save
+                    </button>
+                  </div>
+                  {isPending && <span className='border-3 border-r-0 border-b-0 animate-spin absolute inset-0 m-auto border-indigo-600 w-10 h-10 rounded-full'></span>}
+                </motion.div>
               </div>
             </div>
-            <div className='flex justify-center pb-4  items-center'>
-              <button onClick={handleSave} className='bg-indigo-600 w-full cursor-pointer py-1 rounded-xl'>
-                Save
-              </button>
-            </div>
-            {isPending && <span className='border-3 border-r-0 border-b-0 animate-spin absolute inset-0 m-auto border-indigo-600 w-10 h-10 rounded-full'></span>}
-
-          </motion.div>
-        </div>
-      </div>
+          )
+        }
+      </AnimatePresence>
 
 
 

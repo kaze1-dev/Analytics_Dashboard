@@ -207,15 +207,12 @@ export default function Customers() {
               }
 
             </AnimatePresence>
-            <AnimatePresence>
-              {
-                isOpen && <CustomerPanel
+
+                 <CustomerPanel
                   isOpen={isOpen}
                   closed={() => setIsOpen(false)}
                 />
-              }
 
-            </AnimatePresence>
           </div>
         </>
 

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { HiLocationMarker } from 'react-icons/hi';
 import { HiCheck, HiOutlineTrash, HiPencilSquare, HiUserCircle, HiXMark } from 'react-icons/hi2';
 import WarningBox from './warningBox';
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 
 interface Props {
   isOpen: boolean;
@@ -37,7 +37,9 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
   const [activeTab, setActiveTab] = useState<'Information' | 'Orders'>('Information')
   const [editMode, setEditMode] = useState<boolean>(false)
   const [errors, setErrors] = useState<Partial<Record<keyof UpdateCustomerInput, string>>>({})
+  const [errorBox, setErrorBox] = useState<boolean>(false);
   const [warnBox, setWarnBox] = useState<boolean>(false)
+  const [messageBox, setMessageBox] = useState<boolean>(false)
   const date = customer?.createdAt
 
   const joinedOn = date ? format(new Date(date), 'dd MMM yyyy') : 'N/A'
@@ -78,10 +80,33 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
       {
         onSuccess: () => {
           setEditMode(false);
+          setMessageBox(true);
+        },
+        onError: () => {
+          setEditMode(false);
+          setErrorBox(true);
         }
       }
     )
   }
+
+  useEffect(() => {
+    if (messageBox) {
+      const timer = setTimeout(() => {
+        setMessageBox(false)
+      }, 2000);
+      return () => clearTimeout(timer)
+    }
+  }, [messageBox])
+
+  useEffect(() => {
+    if (errorBox) {
+      const timer = setTimeout(() => {
+        setErrorBox(false);
+      }, 2000);
+      return () => clearTimeout(timer)
+    }
+  }, [errorBox]);
 
   const nameLength = customer?.name.length || 0
   const totalAmount = Math.round(Number(customer?.totalSpent))
@@ -110,20 +135,44 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
 
   return (
     <div>
-      {
-        warnBox && <WarningBox closeDrawer={onClose} customerId={customer?.id} close={() => setWarnBox(false)} />
-      }
+      <AnimatePresence>
+        <WarningBox closeDrawer={onClose} isOpen={warnBox} customerId={customer?.id} close={() => setWarnBox(false)} />
+      </AnimatePresence>
+      <AnimatePresence>
+        {
+          messageBox && (
+            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className='fixed bottom-5 right-10 flex gap-4 items-center bg-neutral-950 border border-neutral-800 rounded-xl px-8 py-4 z-60'>
+              <HiCheck className='stroke-3 text-green-500' size={26} />
+              <p className='text-white/60 font-bold text-lg'>
+                Customer Updated Successfully!
+              </p>
+            </motion.div>
+          )
+        }
+
+        {
+          errorBox && (
+            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className='fixed bottom-5 right-10 flex gap-4 items-center bg-neutral-950 border border-neutral-800 rounded-xl px-8 py-4 z-60'>
+              <HiXMark className='stroke-3 text-red-500' size={26} />
+              <p className='text-white/60 font-bold text-lg'>
+                Something Went Wrong. Please Try again later.
+              </p>
+            </motion.div>
+          )
+        }
+
+      </AnimatePresence>
 
       <motion.div
-        initial={{opacity: 0}}
-        animate={{opacity: 1}}
-        exit={{opacity: 0}}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
         onClick={onClose}
         className='fixed inset-0 bg-black/40 z-40 transition-opacity' />
       <motion.div initial={{ x: '100%', opacity: 0.5 }}
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: '100%', opacity: 0 }}
-        transition={{type: 'spring', damping: 26, stiffness: 220, duration: 0.15}} className='fixed overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden  right-4 top-4 bottom-4  w-82 sm:w-96 bg-neutal-900 z-50 bg-neutral-900/10 backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 px-4 py-4 rounded-2xl'>
+        transition={{ type: 'spring', damping: 26, stiffness: 220, duration: 0.15 }} className='fixed overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden  right-4 top-4 bottom-4  w-82 sm:w-96 bg-neutal-900 z-50 bg-neutral-900/10 backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 px-4 py-4 rounded-2xl'>
         <div className='flex  fixed backdrop-blur-xs left-0 right-0 px-4 bg-neutral-900/10 justify-between items-center mb-10'>
           <h2 className='text-lg md:text-xl text-neutral-200 font-bold'>
             Customer Details
@@ -239,16 +288,6 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                       )
                     }
                   </div>
-                  {/* <div className='mt-6 flex flex-col gap-2'>
-                  <h4 className='font-bold text-xs text-neutral-400'>Status</h4>
-                   {
-                    editMode ? (
-                      <input name='status' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" defaultValue={customer?.status} />
-                    ) : (
-                      <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{customer?.status}</p>
-                    )
-                  } 
-                </div>*/}
                   <div className='mt-6 flex flex-col gap-2'>
                     <h4 className={`${editMode && 'hidden'} font-bold text-xs text-neutral-400`}>Joined on</h4>
                     <p className={`${editMode ? 'hidden' : ''} font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm`}>{joinedOn}</p>
