@@ -163,26 +163,19 @@ const Products = () => {
           </div>
         )
       }
-      <AnimatePresence>
-        {
-          selectedId && <Panel
-            onClose={() => setSelectedId(null)}
-            isOpen={!!selectedId}
-            product={productDetail}
-            loading={isPending}
-          />
-        }
 
-      </AnimatePresence>
-      <AnimatePresence>
-        {
-          isOpen && <NewPanel
-            open={isOpen}
-            onClose={() => setIsOpen(false)}
-          />
-        }
 
-      </AnimatePresence>
+      <Panel
+        onClose={() => setSelectedId(null)}
+        isOpen={!!selectedId}
+        product={productDetail}
+        loading={isPending}
+      />
+
+      <NewPanel
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+      />
     </div>
   )
 }
