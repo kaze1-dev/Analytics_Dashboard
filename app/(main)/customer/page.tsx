@@ -111,7 +111,7 @@ export default function Customers() {
         </div>
         <button 
           onClick={() => setIsOpen(true)} 
-          className="bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-lg shadow-indigo-600/10 cursor-pointer self-stretch sm:self-auto justify-center"
+          className="bg-neutral-100 hover:bg-neutral-200 text-neutral-950 text-sm font-semibold px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-lg shadow-indigo-600/10 cursor-pointer self-stretch sm:self-auto justify-center"
         >
           <span>+</span>
           <span>New Customer</span>

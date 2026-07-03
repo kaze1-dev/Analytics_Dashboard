@@ -1,34 +1,65 @@
-import { newProductSchema } from '@/validaton';
-import React, { useEffect, useState } from 'react'
-import { NewProductInput } from '@/validaton';
-import useCreateProduct from '@/hooks/useCreateProduct';
-import { AnimatePresence, motion } from "framer-motion"
-import { HiCheck } from 'react-icons/hi';
-import { HiXMark } from 'react-icons/hi2';
+"use client";
 
-const NewPanel = ({ open, onClose }: { open: boolean, onClose: () => void }) => {
-  const [messageBox, setMessageBox] = useState<boolean>(false)
-  const [errorBox, setErrorBox] = useState<boolean>(false)
-  const [errors, setErrors] = useState<Partial<Record<keyof NewProductInput, string>>>()
+import React, { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from "framer-motion";
+import { X, Plus, Check, AlertCircle } from 'lucide-react';
+import { newProductSchema, type NewProductInput } from '@/validaton';
+import useCreateProduct from '@/hooks/useCreateProduct';
+
+interface NewPanelProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+const NewPanel = ({ open, onClose }: NewPanelProps) => {
+  const [messageBox, setMessageBox] = useState<boolean>(false);
+  const [errorBox, setErrorBox] = useState<boolean>(false);
+  const [errors, setErrors] = useState<Partial<Record<keyof NewProductInput, string>>>({});
   const [formData, setFormData] = useState({
     name: '',
     price: '',
     stock: ''
-  })
+  });
+
+  const { mutate, isPending } = useCreateProduct();
+
+  // Escape key and body lock handling matching Reference Component standard
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    if (open) {
+      window.addEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "hidden";
+    }
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [open, onClose]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value
-    }))
-  }
-  const { mutate, isPending } = useCreateProduct();
-  const handleSubmit = () => {
+    }));
+    if (errors[name as keyof NewProductInput]) {
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
     const parsedData = {
       name: formData.name,
       price: formData.price === '' ? undefined : Number(formData.price),
       stock: formData.stock === '' ? undefined : Number(formData.stock),
     };
+
     const result = newProductSchema.safeParse(parsedData);
     if (!result.success) {
       const fieldErrors: any = {};
@@ -36,121 +67,188 @@ const NewPanel = ({ open, onClose }: { open: boolean, onClose: () => void }) => 
         if (err.path[0]) {
           fieldErrors[err.path[0]] = err.message;
         }
-      })
-      setErrors(fieldErrors)
+      });
+      setErrors(fieldErrors);
       return;
     }
-    setErrors({})
+
+    setErrors({});
     mutate(result.data, {
       onSuccess: () => {
+        setFormData({ name: '', price: '', stock: '' });
         setMessageBox(true);
         onClose();
       },
-      onError: (error) => {
+      onError: () => {
         setErrorBox(true);
-        onClose();
       }
-    })
-  }
-  useEffect(() => { 
+    });
+  };
+
+  useEffect(() => {
     if (messageBox) {
-      const timer = setTimeout(() => {
-        setMessageBox(false)
-      }, 2000);
-      return () => clearTimeout(timer)
+      const timer = setTimeout(() => setMessageBox(false), 3000);
+      return () => clearTimeout(timer);
     }
-  }, [messageBox])
+  }, [messageBox]);
 
   useEffect(() => {
     if (errorBox) {
-      const timer = setTimeout(() => {
-        setErrorBox(false);
-      }, 2000);
-      return () => clearTimeout(timer)
+      const timer = setTimeout(() => setErrorBox(false), 3000);
+      return () => clearTimeout(timer);
     }
   }, [errorBox]);
+
   return (
     <>
-
-      <AnimatePresence>
-        {
-          messageBox && (
-            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className='fixed bottom-5 right-10 flex gap-4 items-center bg-neutral-950 border border-neutral-800 rounded-xl px-8 py-4 z-60'>
-              <HiCheck className='stroke-3 text-green-500' size={26} />
-              <p className='text-white/60 font-bold text-lg'>
-                Customer Updated Successfully!
+      {/* Toast Alert System Notifications */}
+      <div className="fixed bottom-5 right-5 z-[60] flex flex-col gap-3 pointer-events-none">
+        <AnimatePresence>
+          {messageBox && (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              exit={{ opacity: 0, y: 10 }}
+              className='flex gap-3 items-center bg-neutral-950 border border-emerald-500/20 shadow-2xl rounded-xl px-5 py-3.5'
+            >
+              <Check size={16} className='text-emerald-400' />
+              <p className='text-neutral-300 font-semibold text-xs tracking-wide'>
+                Product Created Successfully!
               </p>
             </motion.div>
-          )
-        }
+          )}
 
-        {
-          errorBox && (
-            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className='fixed bottom-5 right-10 flex gap-4 items-center bg-neutral-950 border border-neutral-800 rounded-xl px-8 py-4 z-60'>
-              <HiXMark className='stroke-3 text-red-500' size={26} />
-              <p className='text-white/60 font-bold text-lg'>
-                Something Went Wrong. Please Try again later.
+          {errorBox && (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              exit={{ opacity: 0, y: 10 }}
+              className='flex gap-3 items-center bg-neutral-950 border border-rose-500/20 shadow-2xl rounded-xl px-5 py-3.5'
+            >
+              <AlertCircle size={16} className='text-rose-400' />
+              <p className='text-neutral-300 font-semibold text-xs tracking-wide'>
+                Something Went Wrong. Please Try Again.
               </p>
             </motion.div>
-          )
-        }
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
+      </div>
+
       <AnimatePresence>
-        {
-          open && (
-            <div>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.15 }}
-                onClick={onClose}
-                className='fixed inset-0 bg-black/40 z-40 transition-opacity' />
-              <motion.div
-                initial={{ x: '100%', opacity: 0.5 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: '100%', opacity: 0 }}
-                transition={{ type: 'spring', damping: 26, stiffness: 220, duration: 0.15 }}
-                className={`fixed overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden  right-4 top-4 bottom-4 bg-neutal-900 z-50 bg-neutral-900/10 backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 px-4 py-4 rounded-2xl w-82 sm:w-96`}>
-                <div className='mb-8 flex justify-between items-center'>
-                  <h1 className='font-semibold'>
-                    New Product
-                  </h1>
-                  <button onClick={onClose} className='text-neutal-600 font-bold cursor-pointer'>&times;</button>
-                </div>
-                <div className='h-full'>
-                  <div className='flex flex-col justify-between'>
-                    <div>
-                      <div className='flex flex-col gap-1 mb-8'>
-                        <h4 className='text-sm font-bold text-white/50'>Product Name</h4>
-                        <input placeholder='Enter product name' type='text' className='font-semibold border border-neutral-800 rounded-xl px-4 py-3 text-neutral-300 text-sm' name='name' value={formData.name} onChange={handleChange} />
-                      </div>
-                      <div className='flex flex-col gap-1 mb-8'>
-                        <h4 className='text-sm font-bold text-white/50'>Price</h4>
-                        <input placeholder='Enter product price' type='text' className='font-semibold border border-neutral-800 rounded-xl px-4 py-3 text-neutral-300 text-sm' name='price' value={formData.price} onChange={handleChange} />
-                      </div>
-                      <div className='flex flex-col gap-1 mb-8'>
-                        <h4 className='text-sm font-bold text-white/50'>Stock</h4>
-                        <input placeholder='Enter product stock' type='number' min={0} max={999} className='font-semibold border border-neutral-800 rounded-xl px-4 py-3 text-neutral-300 text-sm appearance-none' name='stock' value={formData.stock} onChange={handleChange} />
-                      </div>
+        {open && (
+          <>
+            {/* Backdrop Layer overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={onClose}
+              className='fixed inset-0 bg-black/60 backdrop-blur-xs z-50 transition-opacity cursor-pointer' 
+            />
+
+            {/* Premium Obsidian Drawer Panel Sheet */}
+            <motion.div
+              initial={{ x: '100%', opacity: 0.8 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0.8 }}
+              transition={{ type: 'spring', damping: 28, stiffness: 240 }}
+              className="fixed right-0 top-0 bottom-0 h-full bg-neutral-950 border-l border-neutral-900 px-6 py-6 z-50 w-full sm:w-[440px] flex flex-col justify-between overflow-y-auto no-scrollbar shadow-2xl"
+            >
+              <form onSubmit={handleSubmit} className='h-full flex flex-col justify-between'>
+                <div>
+                  {/* Header Title Section */}
+                  <div className='flex items-center justify-between border-b border-neutral-900 pb-4 mb-6'>
+                    <div className='flex items-center gap-2'>
+                      <Plus size={16} className='text-neutral-500' />
+                      <h2 className='text-neutral-200 font-bold text-base tracking-tight'>
+                        New Product
+                      </h2>
                     </div>
-                    <div className='mt-10'>
-                      <button onClick={handleSubmit} className='bg-indigo-600 w-full py-2 rounded-2xl font-bold text-white/80 cursor-pointer hover:bg-indigo-500 transition-all duration-300'>
-                        Create Product
-                      </button>
+                    <button 
+                      type="button"
+                      onClick={onClose} 
+                      className='p-1.5 rounded-lg bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-neutral-200 hover:border-neutral-700 active:scale-95 transition-all cursor-pointer'
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+
+                  {/* Form Controlled Elements Grid */}
+                  <div className='space-y-5'>
+                    <div className='space-y-1.5'>
+                      <span className='text-[10px] font-bold text-neutral-500 uppercase tracking-wider block'>Product Name</span>
+                      <input 
+                        placeholder='Enter product name' 
+                        type='text' 
+                        name='name' 
+                        value={formData.name} 
+                        onChange={handleChange}
+                        disabled={isPending}
+                        className={`w-full bg-neutral-900 text-neutral-300 border px-3 py-2.5 rounded-xl text-xs font-medium placeholder-neutral-600 focus:outline-none transition-all ${
+                          errors.name ? 'border-rose-500/30 focus:border-rose-500/60' : 'border-neutral-800/80 focus:border-neutral-700'
+                        }`}
+                      />
+                      {errors.name && <p className="text-[10px] text-rose-400 font-semibold tracking-wide mt-0.5">{errors.name}</p>}
+                    </div>
+
+                    <div className='space-y-1.5'>
+                      <span className='text-[10px] font-bold text-neutral-500 uppercase tracking-wider block'>Price</span>
+                      <input 
+                        placeholder='0.00' 
+                        type='text' 
+                        name='price' 
+                        value={formData.price} 
+                        onChange={handleChange}
+                        disabled={isPending}
+                        className={`w-full bg-neutral-900 text-neutral-300 border px-3 py-2.5 rounded-xl text-xs font-medium placeholder-neutral-600 focus:outline-none transition-all ${
+                          errors.price ? 'border-rose-500/30 focus:border-rose-500/60' : 'border-neutral-800/80 focus:border-neutral-700'
+                        }`}
+                      />
+                      {errors.price && <p className="text-[10px] text-rose-400 font-semibold tracking-wide mt-0.5">{errors.price}</p>}
+                    </div>
+
+                    <div className='space-y-1.5'>
+                      <span className='text-[10px] font-bold text-neutral-500 uppercase tracking-wider block'>Stock Count</span>
+                      <input 
+                        placeholder='0' 
+                        type='number' 
+                        min={0} 
+                        max={999} 
+                        name='stock' 
+                        value={formData.stock} 
+                        onChange={handleChange}
+                        disabled={isPending}
+                        className={`w-full bg-neutral-900 text-neutral-300 border px-3 py-2.5 rounded-xl text-xs font-medium placeholder-neutral-600 focus:outline-none transition-all no-scrollbar ${
+                          errors.stock ? 'border-rose-500/30 focus:border-rose-500/60' : 'border-neutral-800/80 focus:border-neutral-700'
+                        }`}
+                      />
+                      {errors.stock && <p className="text-[10px] text-rose-400 font-semibold tracking-wide mt-0.5">{errors.stock}</p>}
                     </div>
                   </div>
-                  <div>
-                    {isPending && <span className='border-3 border-r-0 border-b-0 animate-spin absolute inset-0 m-auto border-indigo-600 w-10 h-10 rounded-full'></span>}
-                  </div>
                 </div>
-              </motion.div>
-            </div>
-          )
-        }
+
+                {/* Submit Action Interface Button */}
+                <div className='border-t border-neutral-900 pt-4 mt-6 flex gap-3 relative'>
+                  <button 
+                    type='submit'
+                    disabled={isPending}
+                    className='flex-1 py-2.5 bg-neutral-100 hover:bg-neutral-200 disabled:bg-neutral-900 text-neutral-950 disabled:text-neutral-600 rounded-xl text-xs font-bold tracking-wide uppercase transition-all active:scale-[0.99] cursor-pointer flex items-center justify-center min-h-[38px]'
+                  >
+                    {isPending ? (
+                      <div className='w-4 h-4 rounded-full border-2 border-neutral-600 border-t-transparent animate-spin' />
+                    ) : (
+                      <span>Create Product</span>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </>
+        )}
       </AnimatePresence>
     </>
-  )
-}
+  );
+};
 
-export default NewPanel
+export default NewPanel;

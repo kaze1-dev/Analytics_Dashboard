@@ -1,13 +1,35 @@
-import useDeleteCustomer from '@/hooks/useDeleteCustomer';
-import { AnimatePresence, motion } from 'framer-motion';
-import React, { useEffect, useState } from 'react'
-import { HiCheck, HiInformationCircle, HiXMark } from 'react-icons/hi2';
+"use client";
 
-const WarningBox = ({ close, customerId, closeDrawer, isOpen }: any) => {
+import React, { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { AlertTriangle, Check, AlertCircle } from 'lucide-react';
+import useDeleteCustomer from '@/hooks/useDeleteCustomer';
+
+interface WarningBoxProps {
+  isOpen: boolean;
+  close: () => void;
+  customerId: string | null | undefined;
+  closeDrawer: () => void;
+}
+
+const WarningBox = ({ isOpen, close, customerId, closeDrawer }: WarningBoxProps) => {
   const { mutate, isPending } = useDeleteCustomer();
-  const [messageBox, setMessageBox] = useState<boolean>(false)
-  const [errorBox, setErrorBox] = useState<boolean>(false)
+  const [messageBox, setMessageBox] = useState<boolean>(false);
+  const [errorBox, setErrorBox] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && !isPending) close();
+    };
+
+    if (isOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, isPending, close]);
+
   const handleDelete = () => {
+    if (!customerId) return;
     mutate(customerId, {
       onSuccess: () => {
         close();
@@ -17,79 +39,121 @@ const WarningBox = ({ close, customerId, closeDrawer, isOpen }: any) => {
       onError: () => {
         close();
         closeDrawer();
-        setErrorBox(true)
+        setErrorBox(true);
       }
-    })
-  }
+    });
+  };
 
-useEffect(() => {
-  const timer = setTimeout(() => {
-    setMessageBox(false)
-  }, 2000)
-  return () => clearTimeout(timer)
-}, [messageBox])
+  useEffect(() => {
+    if (messageBox) {
+      const timer = setTimeout(() => setMessageBox(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [messageBox]);
 
-useEffect(() => {
-  const timer = setTimeout(() => {
-    setErrorBox(false)
-  }, 2000)
-  return () => clearTimeout(timer)
-}, [errorBox])
+  useEffect(() => {
+    if (errorBox) {
+      const timer = setTimeout(() => setErrorBox(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorBox]);
 
   return (
     <>
-      <AnimatePresence>
-        {
-          messageBox && (
-            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className='fixed bottom-5 right-10 flex gap-4 items-center bg-neutral-950 border border-neutral-800 rounded-xl px-8 py-4 z-60'>
-              <HiCheck className='stroke-3 text-green-500' size={26} />
-              <p className='text-white/60 font-bold text-lg'>
+      <div className="fixed bottom-5 right-5 z-[100] flex flex-col gap-3 pointer-events-none">
+        <AnimatePresence>
+          {messageBox && (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              exit={{ opacity: 0, y: 10 }}
+              className="flex gap-3 items-center bg-neutral-950 border border-emerald-500/20 shadow-2xl rounded-xl px-5 py-3.5"
+            >
+              <Check size={16} className="text-emerald-400" />
+              <p className="text-neutral-300 font-semibold text-xs tracking-wide">
                 Customer Deleted Successfully!
               </p>
             </motion.div>
-          )
-        }
+          )}
 
-        {
-          errorBox && (
-            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className='fixed bottom-5 right-10 flex gap-4 items-center bg-neutral-950 border border-neutral-800 rounded-xl px-8 py-4 z-60'>
-              <HiXMark className='stroke-3 text-green-500' size={26} />
-              <p className='text-white/60 font-bold text-lg'>
+          {errorBox && (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              exit={{ opacity: 0, y: 10 }}
+              className="flex gap-3 items-center bg-neutral-950 border border-rose-500/20 shadow-2xl rounded-xl px-5 py-3.5"
+            >
+              <AlertCircle size={16} className="text-rose-400" />
+              <p className="text-neutral-300 font-semibold text-xs tracking-wide">
                 Something went wrong. Please try again later.
               </p>
             </motion.div>
-          )
-        }
+          )}
+        </AnimatePresence>
+      </div>
 
-      </AnimatePresence>
+      <AnimatePresence>
+        {isOpen && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center px-4">
+            
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={!isPending ? close : undefined} 
+              className="fixed inset-0 bg-black/75 backdrop-blur-xs cursor-pointer" 
+            />
 
-      {
-        isOpen && (
-          <div>
-            <div onClick={close} className='fixed bg-black/40 z-40 transition-opacity' />
-            <div className='z-100 fixed inset-0 flex justify-center items-center px-3'>
-              <div className='relative'>
-                <div className='bg-neutral-950/10 border border-neutral-800  backdrop-blur-xs p-4 rounded-xl'>
-                  <div className='flex items-center gap-2'>
-                    <HiInformationCircle size={32} className='text-indigo-500' />
-                    <h1 className=''><span className='font-bold mr-3 text-indigo-500'>Info:</span><span className='text-sm text-white/80'>This action is irreversable. Do you want to continue</span></h1>
-                  </div>
-                  <div className='flex justify-center mt-6 gap-10'>
-                    <button onClick={close} className='border border-indigo-500 hover:bg-indigo-500/20 transition-all text-indigo-500 font-bold rounded-lg px-4 py-1 cursor-pointer'>Cencel</button>
-                    <button onClick={handleDelete} className='border border-red-500 font-bold text-red-500 rounded-lg px-4 py-1 cursor-pointer hover:bg-red-500/20 transition-all'>Delete</button>
-                  </div>
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="relative bg-neutral-950 border border-neutral-900 p-5 rounded-2xl w-full max-w-md shadow-2xl z-10 overflow-hidden"
+            >
+              <div className="flex items-start gap-4">
+                <div className="p-2 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-400 shrink-0">
+                  <AlertTriangle size={18} />
                 </div>
-                {
-                  isPending && <div className='w-6 h-6 rounded-full absolute border-3 border-indigo-500 border-r-0 border-b-0 animate-spin inset-0 m-auto' />
-}
+                <div className="space-y-1.5 min-w-0">
+                  <h3 className="text-neutral-200 font-bold text-sm tracking-tight">
+                    Confirm Customer Deletion
+                  </h3>
+                  <p className="text-neutral-400 text-xs leading-relaxed font-medium">
+                    This action is permanent and completely irreversible. Are you absolutely certain you want to wipe this profile and all associated data from the active database?
+                  </p>
+                </div>
               </div>
-            </div>
+
+              <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-neutral-900 relative">
+                <button 
+                  type="button"
+                  onClick={close} 
+                  disabled={isPending}
+                  className="px-4 py-2 bg-neutral-950 hover:bg-neutral-900 text-neutral-400 hover:text-neutral-200 border border-neutral-800 rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={isPending}
+                  className="min-w-[76px] flex items-center justify-center px-4 py-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 rounded-xl text-xs font-bold transition-all active:scale-[0.98] cursor-pointer min-h-[32px]"
+                >
+                  {isPending ? (
+                    <div className="w-3.5 h-3.5 rounded-full border-2 border-rose-400 border-t-transparent animate-spin" />
+                  ) : (
+                    <span>Delete</span>
+                  )}
+                </button>
+              </div>
+              
+            </motion.div>
           </div>
-        )
-      }
-
+        )}
+      </AnimatePresence>
     </>
-  )
-}
+  );
+};
 
-export default WarningBox
+export default WarningBox;
