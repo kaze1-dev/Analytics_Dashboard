@@ -1,45 +1,34 @@
-import { ArrowUp, UsersRound } from 'lucide-react'
-import React, { useState } from 'react'
-import useStats from '@/hooks/useStats';
+"use client";
 
-const CustomerStat = (props: any) => {
-/*   const [frame, setFrame] = useState("1w");
-  const { data, isLoading, error } = useStats(frame); */
-  return (
-    <>
-      {
-        props.loading ?
-          <div className='bg-neutral-900 w-full h-28 rounded-lg animate-pulse' />
-          :
-          <div className='border border-neutral-800 rounded-xl border-solid hover:border-neutral-700 transition-all p-4'>
+import React from 'react';
+import { UsersRound } from 'lucide-react';
 
-            <div className='mb-2'>
-              <div className='flex gap-4 items-center'>
-                {/* <div className='rounded-lg flex items-center justify-center p-1 bg-neutral-900'>
-                  <UsersRound className='text-indigo-500' />
-                </div> */}
-                <div>
-                  <h4 className='text-white/50 text-xs sm:text-sm font-bold'>
-                    Total Customers
-                  </h4>
-                </div>
-              </div>
-
-            </div>
-            <div className=''>
-              <h1 className='text-xl sm:text-2xl font-bold text-white/80'>
-                {props.value}
-              </h1>
-            </div>
-
-         
-
-
-          </div>
-      }
-    </>
-
-  )
+interface StatCardProps {
+  value: string | undefined;
+  loading: boolean;
 }
 
-export default CustomerStat
+const CustomerStat = ({ value, loading }: StatCardProps) => {
+  if (loading) {
+    return <div className="w-full h-[102px] bg-neutral-900/40 border border-neutral-900/80 rounded-2xl animate-pulse" />;
+  }
+
+  return (
+    <div className="w-full bg-neutral-900/10 border border-neutral-900 rounded-2xl p-4 flex items-center justify-between hover:border-neutral-800/80 transition-all duration-200 group select-none">
+      <div className="space-y-1.5 min-w-0">
+        <h4 className="text-neutral-500 text-xs font-bold uppercase tracking-wider">
+          Total Customers
+        </h4>
+        <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-neutral-100 tabular-nums truncate">
+          {value ?? "0"}
+        </h1>
+      </div>
+
+      <div className="h-11 w-11 shrink-0 flex items-center justify-center rounded-xl bg-neutral-900/60 border border-neutral-800/60 group-hover:border-indigo-500/30 transition-colors duration-200 shadow-inner">
+        <UsersRound size={18} className="text-indigo-400 group-hover:text-indigo-300 transition-colors" />
+      </div>
+    </div>
+  );
+};
+
+export default CustomerStat;

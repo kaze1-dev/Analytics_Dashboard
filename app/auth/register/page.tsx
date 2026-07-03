@@ -1,6 +1,5 @@
 "use client"
 import { Eye, EyeClosed } from 'lucide-react';
-import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import React, { SyntheticEvent } from 'react'
 import { useState } from 'react'
@@ -37,16 +36,8 @@ const RegisterPage = () => {
     const data = await res.json()
     console.log(data)
 
-    if (res.ok) {
-      await signIn("credentials", {
-        email: form.email,
-        password: form.password,
-        redirect: true,
-        callbackUrl: "/home"
-      })
-    } else {
-      console.log(data.error)
-    }
+
+
   }
 
   return (

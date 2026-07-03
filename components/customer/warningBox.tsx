@@ -81,7 +81,7 @@ useEffect(() => {
                 </div>
                 {
                   isPending && <div className='w-6 h-6 rounded-full absolute border-3 border-indigo-500 border-r-0 border-b-0 animate-spin inset-0 m-auto' />
-                }
+}
               </div>
             </div>
           </div>

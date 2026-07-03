@@ -33,6 +33,14 @@ interface Props {
     }[];
   };
 }
+
+const Colors: Record<string, string> = {
+  active: 'bg-green-600/20 text-green-500',
+  inactive: 'bg-red-600/20 text-red-500',
+  lead: 'bg-stone-600/20 text-stone-400',
+  pending: 'bg-yellow-600/20 text-yellow-500',
+};
+
 const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
   const [activeTab, setActiveTab] = useState<'Information' | 'Orders'>('Information')
   const [editMode, setEditMode] = useState<boolean>(false)
@@ -47,7 +55,6 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
     name: customer?.name || '',
     email: customer?.email || '',
     phone: customer?.phone || '',
-
   });
   const { mutate, isPending } = useUpdateCustomer()
 
@@ -58,6 +65,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
       [name]: value
     }))
   };
+
   const handleSave = async () => {
     if (!customer?.id) {
       console.error("No customer ID found");
@@ -113,10 +121,8 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
   const allItems = customer?.orders.flatMap(order => order.items) || [];
   const totalItemsQuantity = allItems.reduce((sum, item) => sum + item.quantity, 0);
 
-
   useEffect(() => {
     if (customer && isOpen) {
-      const formattedDate = customer.createdAt ? format(new Date(customer.createdAt), 'dd MMM yyyy') : 'N/A';
       setFormData({
         name: customer.name || '',
         email: customer.email || '',
@@ -124,14 +130,6 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
       })
     }
   }, [customer, isOpen])
-
-
-  const Colors: any = {
-    active: 'bg-green-600/20 text-green-600',
-    inactive: 'bg-red-600/20 text-red-600',
-    lead: 'bg-stone-600/20 text-stone-500',
-    pending: 'bg-yellow-600/20 text-yellow-600'
-  }
 
   return (
     <div>
@@ -141,7 +139,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
       <AnimatePresence>
         {
           messageBox && (
-            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className='fixed bottom-5 right-10 flex gap-4 items-center bg-neutral-950 border border-neutral-800 rounded-xl px-8 py-4 z-60'>
+            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className='fixed bottom-5 right-10 flex gap-4 items-center bg-neutral-950 border border-neutral-800 rounded-xl px-8 py-4 z-[60] shadow-2xl shadow-black/40'>
               <HiCheck className='stroke-3 text-green-500' size={26} />
               <p className='text-white/60 font-bold text-lg'>
                 Customer Updated Successfully!
@@ -152,7 +150,7 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
 
         {
           errorBox && (
-            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className='fixed bottom-5 right-10 flex gap-4 items-center bg-neutral-950 border border-neutral-800 rounded-xl px-8 py-4 z-60'>
+            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className='fixed bottom-5 right-10 flex gap-4 items-center bg-neutral-950 border border-neutral-800 rounded-xl px-8 py-4 z-[60] shadow-2xl shadow-black/40'>
               <HiXMark className='stroke-3 text-red-500' size={26} />
               <p className='text-white/60 font-bold text-lg'>
                 Something Went Wrong. Please Try again later.
@@ -160,7 +158,6 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
             </motion.div>
           )
         }
-
       </AnimatePresence>
 
       <motion.div
@@ -172,46 +169,56 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
       <motion.div initial={{ x: '100%', opacity: 0.5 }}
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: '100%', opacity: 0 }}
-        transition={{ type: 'spring', damping: 26, stiffness: 220, duration: 0.15 }} className='fixed overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden  right-4 top-4 bottom-4  w-82 sm:w-96 bg-neutal-900 z-50 bg-neutral-900/10 backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 px-4 py-4 rounded-2xl'>
-        <div className='flex  fixed backdrop-blur-xs left-0 right-0 px-4 bg-neutral-900/10 justify-between items-center mb-10'>
+        transition={{ type: 'spring', damping: 26, stiffness: 220, duration: 0.15 }}
+        className='fixed overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden right-4 top-4 bottom-4 w-82 sm:w-96 z-50 bg-neutral-900/10 backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 transition-colors px-4 py-4 rounded-2xl'>
+        <div className='sticky top-0 -mx-4 -mt-4 px-4 pt-4 pb-4 z-10 backdrop-blur-md bg-neutral-950/70 flex justify-between items-center rounded-t-2xl border-b border-neutral-800/80'>
           <h2 className='text-lg md:text-xl text-neutral-200 font-bold'>
             Customer Details
           </h2>
-          <button onClick={onClose} className='text-neutral-300 font-bold cursor-pointer'>✕</button>
+          <button
+            onClick={onClose}
+            aria-label="Close drawer"
+            className='text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800/60 transition-colors font-bold cursor-pointer h-7 w-7 flex items-center justify-center rounded-full'
+          >
+            ✕
+          </button>
         </div>
         {isLoading ? (
-          <div className='space-y-4 mt-10'>
+          <div className='space-y-4 mt-6'>
             <div className='h-4 bg-neutral-800 animate-pulse rounded w-3/4'></div>
             <div className='h-4 bg-neutral-800 animate-pulse rounded w-1/2'></div>
           </div>
         ) : (
-          <div className='mt-16'>
-            <div className='cursor-default' >
+          <div className='mt-6'>
+            <div className='cursor-default'>
               <div className='flex justify-between'>
                 <div className='flex items-center gap-2 mb-6'>
-                  <HiUserCircle size={50} className='text-indigo-600' />
-                  <div className='flex flex-col gap-1'>
-                    <h2 className='flex items-center gap-2'>
+                  <HiUserCircle size={50} className='text-indigo-600 shrink-0' />
+                  <div className='flex flex-col gap-1 min-w-0'>
+                    <h2 className='flex items-center gap-2 flex-wrap'>
                       <span className='text-sm sm:text-lg font-bold text-neutral-300'>
                         {
                           nameLength >= 18 ? `${customer?.name.substring(0, 18)}...` : customer?.name
                         }
                       </span>
-                      <span className=' text-neutral-300'>&middot;</span>
-                      <span className={`${Colors[customer?.status!]} font-bold rounded-full px-3 py-2 text-xs`}>{customer?.status}</span>
+                      <span className='text-neutral-600'>&middot;</span>
+                      <span className={`${Colors[customer?.status ?? ''] ?? 'bg-neutral-700/30 text-neutral-400'} font-bold rounded-full px-3 py-1 text-xs whitespace-nowrap`}>
+                        {customer?.status}
+                      </span>
                     </h2>
-                    <p className='text-xs flex items-center gap-1 font-semibold text-neutral-400'>
-                      <HiLocationMarker size={16} className='mb-0.5' />
-                      <span>{customer?.address}</span>
+                    <p className='text-xs flex items-center gap-1 font-semibold text-neutral-400 min-w-0'>
+                      <HiLocationMarker size={16} className='mb-0.5 shrink-0' />
+                      <span className='truncate' title={customer?.address}>{customer?.address}</span>
                     </p>
                   </div>
-
                 </div>
-                <div className=''>
-                  <div onClick={() => setWarnBox(true)} className=' text-red-600 p-1 rounded cursor-pointer'>
-                    <HiOutlineTrash size={22} />
-                  </div>
-                </div>
+                <button
+                  onClick={() => setWarnBox(true)}
+                  aria-label="Delete customer"
+                  className='text-red-500/80 hover:text-red-500 hover:bg-red-500/10 transition-colors p-1.5 rounded-lg cursor-pointer h-fit'
+                >
+                  <HiOutlineTrash size={20} />
+                </button>
               </div>
               <div className='flex w-full justify-between px-10 mt-3 py-4 border border-neutral-800 rounded-2xl hover:border-neutral-700 transition-all'>
                 <div className='flex flex-col gap-1'>
@@ -233,18 +240,37 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                 </div>
               </div>
             </div>
-            <div className='flex justify-around mt-10  font-bold text-neutral-300'>
-              <h4 onClick={() => setActiveTab('Information')} className='cursor-pointer'>Information</h4>
-              <h4 onClick={() => setActiveTab('Orders')} className='cursor-pointer'>Orders</h4>
+
+            <div className='flex justify-around mt-10 font-bold text-sm'>
+              {(['Information', 'Orders'] as const).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`cursor-pointer pb-1 transition-colors ${
+                    activeTab === tab ? 'text-indigo-400' : 'text-neutral-400 hover:text-neutral-200'
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
             </div>
             <div className='relative my-2'>
               <hr className='text-neutral-800' />
-              <div className={`absolute top-0 h-0.5 bg-indigo-600 transition-all duration-300 ${activeTab === 'Information' ? 'w-1/2 left-0' : 'w-1/2 left-1/2'}`} />
+              <div className={`absolute top-0 h-0.5 bg-indigo-500 transition-all duration-300 ${activeTab === 'Information' ? 'w-1/2 left-0' : 'w-1/2 left-1/2'}`} />
             </div>
+
             {activeTab === 'Information' ? (
               <div className='cursor-default'>
-                <div onClick={() => setEditMode(true)} className='flex justify-end mt-6'>
-                  <HiPencilSquare size={18} className={`text-indigo-600 ${editMode ? 'hidden' : ''} cursor-pointer`} />
+                <div className='flex justify-end mt-6 h-5'>
+                  {!editMode && (
+                    <button
+                      onClick={() => setEditMode(true)}
+                      aria-label="Edit customer information"
+                      className='text-indigo-500 hover:text-indigo-400 cursor-pointer transition-colors'
+                    >
+                      <HiPencilSquare size={18} />
+                    </button>
+                  )}
                 </div>
                 <div className='relative'>
                   <div className='mt-6 flex flex-col gap-2'>
@@ -252,77 +278,100 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                     {
                       editMode ? (
                         <>
-                          <input onChange={handleChange} name='name' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={formData.name} />
-                          {errors.name ? <span className='text-red-600 text-xs'>{errors.name}</span> : <span></span>}
+                          <input
+                            onChange={handleChange}
+                            name='name'
+                            className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm outline-none transition-colors focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/40'
+                            type="text"
+                            value={formData.name}
+                          />
+                          {errors.name ? <span className='text-red-500 text-xs'>{errors.name}</span> : null}
                         </>
                       ) : (
                         <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{customer?.name}</p>
                       )
                     }
-
                   </div>
                   <div className='mt-6 flex flex-col gap-2'>
                     <h4 className='font-bold text-xs text-neutral-400'>Email</h4>
                     {
                       editMode ? (
                         <>
-                          <input onChange={handleChange} name='email' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={formData.email} />
-                          {errors.email && <span className='text-red-600 text-xs'>{errors.email}</span>}
+                          <input
+                            onChange={handleChange}
+                            name='email'
+                            className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm outline-none transition-colors focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/40'
+                            type="text"
+                            value={formData.email}
+                          />
+                          {errors.email && <span className='text-red-500 text-xs'>{errors.email}</span>}
                         </>
                       ) : (
                         <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{customer?.email}</p>
                       )
                     }
-
                   </div>
                   <div className='mt-6 flex flex-col gap-2'>
                     <h4 className='font-bold text-xs text-neutral-400'>Phone number</h4>
                     {
                       editMode ? (
                         <>
-                          <input onChange={handleChange} name='phone' className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm' type="text" value={formData.phone} />
-                          {errors.phone && <span className='text-red-600 text-xs'>{errors.phone}</span>}
+                          <input
+                            onChange={handleChange}
+                            name='phone'
+                            className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm outline-none transition-colors focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/40'
+                            type="text"
+                            value={formData.phone}
+                          />
+                          {errors.phone && <span className='text-red-500 text-xs'>{errors.phone}</span>}
                         </>
                       ) : (
                         <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{customer?.phone}</p>
                       )
                     }
                   </div>
-                  <div className='mt-6 flex flex-col gap-2'>
-                    <h4 className={`${editMode && 'hidden'} font-bold text-xs text-neutral-400`}>Joined on</h4>
-                    <p className={`${editMode ? 'hidden' : ''} font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm`}>{joinedOn}</p>
+                  {!editMode && (
+                    <div className='mt-6 flex flex-col gap-2'>
+                      <h4 className='font-bold text-xs text-neutral-400'>Joined on</h4>
+                      <p className='font-semibold border border-neutral-800 rounded-xl px-4 py-2 text-neutral-300 text-sm'>{joinedOn}</p>
+                    </div>
+                  )}
+
+                  {isPending && (
+                    <div className='absolute inset-0 flex items-center justify-center bg-neutral-950/40 rounded-xl'>
+                      <div className='border-3 border-b-transparent border-r-transparent animate-spin h-8 w-8 rounded-full border-indigo-500'></div>
+                    </div>
+                  )}
+                </div>
+
+                {editMode && (
+                  <div className='mt-6 flex justify-center items-center gap-8 w-full'>
+                    <button
+                      onClick={handleSave}
+                      aria-label="Save changes"
+                      className='flex items-center gap-1.5 text-xs font-bold text-green-500 hover:bg-green-500/10 px-4 py-2 rounded-lg cursor-pointer transition-colors'
+                    >
+                      <HiCheck size={18} className='stroke-3' />
+                      Save
+                    </button>
+                    <button
+                      aria-label="Cancel editing"
+                      className='flex items-center gap-1.5 text-xs font-bold text-neutral-400 hover:bg-neutral-800/60 px-4 py-2 rounded-lg cursor-pointer transition-colors'
+                      onClick={() => {
+                        setEditMode(false);
+                        setErrors({});
+                        setFormData({
+                          name: customer?.name || '',
+                          email: customer?.email || '',
+                          phone: customer?.phone || '',
+                        })
+                      }}
+                    >
+                      <HiXMark size={18} className='stroke-3' />
+                      Cancel
+                    </button>
                   </div>
-                  {
-                    isPending ?
-                      <div className='border-3 border-b-0 animate-spin border-r-0 h-10 w-10 rounded-full border-indigo-600 absolute inset-0 m-auto'></div> :
-                      <div></div>
-                  }
-
-                </div>
-                <div className='mt-4'>
-                  {
-                    editMode ? (
-                      <div className='flex text-indigo-600 font-bold justify-center items-center gap-10 w-full'>
-                        <div onClick={handleSave} className='cursor-pointer'>
-                          <HiCheck size={20} className='stroke-4' />
-                        </div>
-                        <div className='cursor-pointer' onClick={() => {
-                          setEditMode(false);
-                          setFormData({
-                            name: customer?.name || '',
-                            email: customer?.email || '',
-                            phone: customer?.phone || '',
-                          })
-                        }} >
-                          <HiXMark size={20} className='stroke-4' />
-                        </div>
-                      </div>
-                    ) : (
-                      <div></div>
-                    )
-                  }
-                </div>
-
+                )}
               </div>
             ) : (
               <div className='cursor-default'>
@@ -342,23 +391,28 @@ const CustomDrawer = ({ isOpen, onClose, customer, isLoading }: Props) => {
                   <h4 className='font-bold text-xs text-neutral-400'>
                     Purchased Products
                   </h4>
-                  <div className='space-y-4'>
-                    {allItems.map((item, index) => (
-                      <div key={index} className='flex items-center justify-between border border-neutral-800 rounded-xl px-4 py-2 text-sm'>
-                        <span className='text-neutral-300 font-semibold'>
-                          {item.product.name}
-                        </span>
-                        <span className='text-neutral-500 text-xs'>x{item.quantity}</span>
-                        <span className='text-indigo-600 font-bold'>
-                          ${item.price}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+                  {allItems.length === 0 ? (
+                    <p className='text-neutral-600 text-sm border border-dashed border-neutral-800 rounded-xl px-4 py-6 text-center'>
+                      No products purchased yet
+                    </p>
+                  ) : (
+                    <div className='space-y-3'>
+                      {allItems.map((item, index) => (
+                        <div key={index} className='flex items-center justify-between border border-neutral-800 rounded-xl px-4 py-2.5 text-sm hover:border-neutral-700 transition-colors'>
+                          <span className='text-neutral-300 font-semibold truncate mr-2'>
+                            {item.product.name}
+                          </span>
+                          <span className='text-neutral-500 text-xs shrink-0'>x{item.quantity}</span>
+                          <span className='text-indigo-400 font-bold ml-3 shrink-0'>
+                            ${item.price}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
-
           </div>
         )}
       </motion.div>

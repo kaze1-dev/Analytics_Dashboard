@@ -1,108 +1,160 @@
-"use client"
-import React from 'react'
-import { HiChevronDoubleLeft, HiChevronDoubleRight, HiHome } from 'react-icons/hi2'
-import { HiChartBar } from 'react-icons/hi2'
-import { HiShoppingCart } from 'react-icons/hi2'
-import { HiCog } from 'react-icons/hi'
-import { HiUsers } from 'react-icons/hi2'
-import { HiSquare3Stack3D } from 'react-icons/hi2'
-import { useSession } from 'next-auth/react'
+"use client";
+
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
+import {
+  HiHome,
+  HiChartBar,
+  HiShoppingCart,
+  HiUsers,
+  HiSquare3Stack3D,
+  HiCog6Tooth,
+  HiChevronDoubleLeft,
+} from 'react-icons/hi2';
 
+interface MenuDrawerProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 
-const MenuDrawer = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
-  const { data: session, status } = useSession();
-  const email = session?.user?.email;
-  const formattedEmail = email?.split("@")[0] || "user";
+const mainNavItems = [
+  { name: 'Home', href: '/home', icon: HiHome },
+  { name: 'Customers', href: '/customer', icon: HiUsers },
+  { name: 'Orders', href: '/orders', icon: HiShoppingCart },
+  { name: 'Products', href: '/products', icon: HiSquare3Stack3D },
+  { name: 'Analytics', href: '/analytics', icon: HiChartBar },
+];
+
+const bottomNavItems = [
+  { name: 'Settings', href: '/settings', icon: HiCog6Tooth },
+];
+
+const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
   const pathname = usePathname();
-
-  const mainNavItems = [
-    { name: 'Home', href: '/home', icon: HiHome },
-    { name: 'Customers', href: '/customer', icon: HiUsers },
-    { name: 'Orders', href: '/orders', icon: HiShoppingCart },
-    { name: 'Products', href: '/products', icon: HiSquare3Stack3D },
-    { name: 'Analytics', href: '/analytics', icon: HiChartBar },
-  ];
-  const bottomNavItems = [
-    { name: 'Settings', href: '/settings', icon: HiCog },
-  ]
 
   return (
     <>
-      <motion.div initial={{ opacity: 0 }}
+      <motion.div
+        initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.1 }} onClick={onClose} className='fixed inset-0 bg-black/40 z-40 transition-opacity' />
-      <motion.div initial={{ x: '-100%', opacity: 0.5 }}
+        transition={{ duration: 0.15 }}
+        onClick={onClose}
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+      />
+      <motion.div
+        initial={{ x: '-100%', opacity: 0.8 }}
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: '-100%', opacity: 0 }}
-        transition={{ type: 'spring', damping: 26, stiffness: 220, duration: 0.15 }} className={`fixed overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden  left-4 top-4 bottom-4 bg-neutal-900 z-50 bg-neutral-900/10 backdrop-blur-xs border border-neutral-800 hover:border-neutral-700 px-4 py-4 rounded-2xl w-50`}>
-        <div onClick={onClose} className='absolute right-1 cursor-pointer hover:bg-neutral-900 p-1.5 rounded-lg hover:text-indigo-500 transition-all'>
-          <HiChevronDoubleLeft className='stroke-1' />
-        </div>
-        <nav className='h-full w-full justify-between flex-col font-sans rounded-2xl  transition-all cursor-default flex'>
-          <div className='flex flex-col'>
-            <div className='flex gap-2 bg items-center mb-10 '>
-
-              <div className='text-2xl font-mono font-semibold'>
-                <div className='bg-neutral-900/80 px-2.5 rounded-lg relative text-neutral-300'>
-                  <div>#</div>
-                  <span className='absolute bg-green-500 border-full border-white w-2 h-2 rounded-full bottom-0 right-0'></span>
-
-                </div>
+        transition={{ type: 'spring', damping: 28, stiffness: 240 }}
+        className="fixed left-4 top-4 bottom-4 w-64 bg-neutral-950/95 backdrop-blur-md border border-neutral-900 p-4 rounded-2xl z-50 shadow-2xl flex flex-col justify-between overflow-y-auto select-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+      >
+        <div className="flex flex-col">
+          <div className="flex items-center justify-between mb-6 group">
+            <Link
+              href="/home"
+              onClick={onClose}
+              className="flex gap-3 items-center p-1 rounded-xl transition-colors"
+            >
+              <div className="relative shrink-0 flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-900 border border-neutral-800 text-sm font-bold font-mono text-neutral-300">
+                FA
+                <span className="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-neutral-950" />
               </div>
-              <div className='flex flex-col'>
-                <div className='text-xl  font-semibold text-neutral-300'>
-                  <span>{session?.user?.name}</span>
-
-                </div>
-                <div className='text-neutral-500 text-xs'>
-                  {formattedEmail}
-                </div>
+              <div className="flex flex-col min-w-0 leading-tight">
+                <span className="text-sm font-semibold text-neutral-200 truncate">
+                  Faisal
+                </span>
+                <span className="text-neutral-500 text-xs truncate">
+                  faisal123
+                </span>
               </div>
-            </div>
+            </Link>
+            <button
+              onClick={onClose}
+              aria-label="Close menu"
+              className="h-8 w-8 flex items-center justify-center cursor-pointer text-neutral-400 hover:text-indigo-400 hover:bg-neutral-900/60 rounded-lg transition-all"
+            >
+              <HiChevronDoubleLeft size={16} />
+            </button>
+          </div>
+          <nav className="flex flex-col space-y-0.5">
             {mainNavItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
-              return (
-                <Link onClick={() => {
-                  onClose()
-                }} key={item.name} href={item.href}>
-                  <div
-                    className={`text-sm flex items-center gap-2 font-semibold px-2 py-2 rounded-xl mb-1 cursor-pointer transition-all duration-200 ${isActive ? 'bg-neutral-900/80 text-indigo-500' : 'text-neutral-400 hover:bg-neutral-900/50 hover:text-neutral-200'}`}
-                  >
-                    <Icon size={18} className={isActive ? 'text-indigo-500' : 'text-neutral-400'} />
-                    <span className='mt-0.5'>{item.name}</span>
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-          <div className='flex flex-col text-sm'>
-            {bottomNavItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.href;
 
               return (
-                <Link onClick={() => {
-                  onClose()
-                }} key={item.href} href={item.href}>
+                <Link 
+                  key={item.name} 
+                  href={item.href} 
+                  onClick={onClose}
+                  aria-current={isActive ? 'page' : undefined}
+                  className="block group"
+                >
                   <div
-                    className={`text-sm flex items-center gap-2 font-semibold px-2 py-2 rounded-xl mb-1 cursor-pointer transition-all duration-200 ${isActive ? 'bg-neutral-900 text-indigo-500' : 'text-neutral-400 hover:bg-neutral-900/50 hover:text-neutral-200'}`}
+                    className={`relative text-sm flex items-center gap-3 font-medium px-3.5 py-2.5 rounded-xl transition-all duration-200 ${
+                      isActive
+                        ? 'bg-neutral-900 text-indigo-400 font-semibold'
+                        : 'text-neutral-400 hover:bg-neutral-900/40 hover:text-neutral-200'
+                    }`}
                   >
-                    <Icon size={18} className={isActive ? 'text-indigo-500' : 'text-neutral-400'} />
-                    <span className='mt-0.5'>{item.name}</span>
+                    {isActive && (
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 rounded-r-full bg-indigo-500" />
+                    )}
+                    <Icon
+                      size={20}
+                      className={`transition-colors duration-200 shrink-0 ${
+                        isActive ? 'text-indigo-400' : 'text-neutral-500 group-hover:text-neutral-300'
+                      }`}
+                    />
+                    <span>{item.name}</span>
                   </div>
                 </Link>
               );
             })}
-          </div>
-        </nav>
+          </nav>
+        </div>
+
+        {/* Global Configuration Link Block Wrapper */}
+        <div className="flex flex-col pt-3 border-t border-neutral-900">
+          {bottomNavItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = pathname === item.href;
+
+            return (
+              <Link 
+                key={item.name} 
+                href={item.href} 
+                onClick={onClose}
+                aria-current={isActive ? 'page' : undefined}
+                className="block group"
+              >
+                <div
+                  className={`relative text-sm flex items-center gap-3 font-medium px-3.5 py-2.5 rounded-xl transition-all duration-200 ${
+                    isActive
+                      ? 'bg-neutral-900 text-indigo-400 font-semibold'
+                      : 'text-neutral-400 hover:bg-neutral-900/40 hover:text-neutral-200'
+                  }`}
+                >
+                  {isActive && (
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 rounded-r-full bg-indigo-500" />
+                  )}
+                  <Icon
+                    size={20}
+                    className={`transition-colors duration-200 shrink-0 ${
+                      isActive ? 'text-indigo-400' : 'text-neutral-500 group-hover:text-neutral-300'
+                    }`}
+                  />
+                  <span>{item.name}</span>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
       </motion.div>
     </>
-  )
-}
+  );
+};
 
-export default MenuDrawer
+export default MenuDrawer;

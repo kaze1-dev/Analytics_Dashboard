@@ -1,171 +1,128 @@
 "use client";
+
+import React from 'react';
+import { MoveRight, ShoppingBag } from 'lucide-react';
 import useRecentOrders from '@/hooks/useRecentOrder';
-import { MoveRight } from 'lucide-react';
-import React from 'react'
 
-/* type Order = {
-  id: string
-  customer: string
-  date: string
-  status: "Delivered" | "Pending" | "Returned",
-  amount: number
-  items: OrderItem[]
+interface CustomerProfile {
+  name: string;
 }
 
-type OrderItem = {
-  name: string
-  quantity: number
-  price: number
+interface OrderRecord {
+  id: string;
+  createdAt: string;
+  status: "delivered" | "pending" | "cancelled" | "shipped" | string;
+  totalAmount: number;
+  customer?: CustomerProfile;
 }
 
-const orders: Order[] = [
-  {
-    id: "#1024",
-    customer: "John Kaisen",
-    date: "2026-4-16",
-    status: "Delivered",
-    amount: 12000,
-    items: [
-      { name: "Shoes", quantity: 1, price: 8000 },
-      { name: "airbuds", quantity: 1, price: 4000 }
-    ]
-  },
+const statusStyles: Record<string, string> = {
+  delivered: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  pending: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+  cancelled: "bg-rose-500/10 text-rose-400 border-rose-500/20",
+  shipped: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20"
+};
 
-  {
-    id: "#1025",
-    customer: "Ali khan",
-    date: "2026-4-16",
-    status: "Pending",
-    amount: 7000,
-    items: [
-      { name: "watch", quantity: 1, price: 4000 },
-      { name: "necklece", quantity: 1, price: 3000 }
-    ]
-  },
+const currencyFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 0,
+});
 
-  {
-    id: "#1026",
-    customer: "Kazuki",
-    date: "2026-4-17",
-    status: "Returned",
-    amount: 5000,
-    items: [
-      { name: "watch", quantity: 2, price: 2500 }
-    ]
-  },
-
-  {
-    id: "#1027",
-    customer: "Naruto",
-    date: "2026-4-17",
-    status: "Delivered",
-    amount: 5000,
-    items: [
-      { name: "watch", quantity: 2, price: 2500 }
-    ]
-  },
-
-  {
-    id: "#1028",
-    customer: "Madara",
-    date: "2026-4-17",
-    status: "Delivered",
-    amount: 5000,
-    items: [
-      { name: "watch", quantity: 2, price: 2500 }
-    ]
-  },
-
-  {
-    id: "#1029",
-    customer: "Itachi",
-    date: "2026-4-17",
-    status: "Returned",
-    amount: 5000,
-    items: [
-      { name: "watch", quantity: 2, price: 2500 }
-    ]
-  },
-
-] */
-
-const statusStyles = {
-  delivered: "bg-green-950/50  text-green-600",
-  pending: "bg-yellow-950 text-yellow-600",
-  cancelled: "bg-red-950 text-red-600",
-  shipped: "bg-indigo-500/10 text-indigo-500"
-}
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric"
+});
 
 const OrdersTable = () => {
-  const { data: orders, isLoading, error } = useRecentOrders()
-  console.log(orders)
-  return (
+  const { data: orders, isLoading, error } = useRecentOrders();
 
-    <div className=''>
-      {
-        isLoading
-          ? (<div className='h-90 p-5 w-full rounded-2xl bg-neutral-900 animate-pulse transition-all' />)
-          : (
-          <div className=' bg-neutral-950 border border-neutral-800 hover:border-neutral-700 transition-all rounded-2xl p-5 h-90 overflow-auto no-scrollbar'>
-        <h1 className='text-xl font-semibold mb-4 text-neutral-400'>
-          Recent Orders
-        </h1>
-        <div className='overflow-x-auto'>
-          <table className='w-full text-left overflow-y-scroll'>
-            <thead>
-              <tr className='text-neutral-400 text-sm border-b border-neutral-700'>
-                <th className='py-2'>Order ID</th>
-                <th className='py-2'>Customer</th>
-                <th className='py-2'>Date</th>
-                <th className='py-2'>Status</th>
-                <th className='py-2'>Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders?.map((order: any) => (
-                <tr
-                  key={order.id}
-                  className='border-b border-neutral-800 last:border-none text-sm hover:bg-neutral-900/40 cursor-pointer rounded'
-                >
-                  <td className='py-6 font-bold text-neutral-400'>
-                    {order.id.slice(-4).toUpperCase()}
-                  </td>
-                  <td className='py-6 text-neutral-400 font-bold'>
-                    {order.customer?.name || "unknown"}
-                  </td>
-                  <td className='py-6 text-neutral-400 font-bold'>
-                    {new Date(order.createdAt).toLocaleString()}
-                  </td>
-                  <td className='py-6'>
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${statusStyles[order.status as keyof typeof statusStyles]}`}>
-                      {order.status.toUpperCase()}
-                    </span>
-                  </td>
-                  <td className='text-neutral-400 font-bold'>
-                    {order.totalAmount.toLocaleString()}
-                  </td>
-                </tr>
-              ))
-
-              }
-
-            </tbody>
-
-          </table>
-        </div>
-        <div className='flex gap-2 text-blue-600 font-bold text-sm items-center justify-center mt-4 cursor-pointer'>
-          <span className=''>
-            View all
-          </span>
-          <MoveRight />
+  if (isLoading) {
+    return (
+      <div className="w-full h-[400px] bg-neutral-900/20 animate-pulse flex items-center justify-center rounded-2xl">
+        <div className="flex flex-col items-center gap-2">
+          <div className="h-6 w-6 border-2 border-neutral-700 border-t-transparent rounded-full animate-spin" />
+          <span className="text-xs text-neutral-500 font-medium tracking-wide">Fetching recent transactions...</span>
         </div>
       </div>
-        )
-      }
-      
+    );
+  }
+
+  if (error || !orders || orders.length === 0) {
+    return (
+      <div className="w-full h-[400px] flex flex-col items-center justify-center border border-dashed border-neutral-900 rounded-2xl p-6 text-center">
+        <div className="h-10 w-10 rounded-xl bg-neutral-900/60 border border-neutral-800/60 flex items-center justify-center text-neutral-500 mb-3">
+          <ShoppingBag size={18} />
+        </div>
+        <h3 className="text-sm font-semibold text-neutral-300">No transactions recorded</h3>
+        <p className="text-xs text-neutral-500 mt-1 max-w-xs">New processing updates will appear automatically when operations process.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-6 flex flex-col min-h-[400px] justify-between select-none">
+      <div>
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-neutral-200 font-bold text-lg tracking-tight">
+            Recent Orders
+          </h2>
+          <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-neutral-900 text-neutral-400 border border-neutral-800">
+            Live updates
+          </span>
+        </div>
+        <div className="w-full overflow-x-auto no-scrollbar">
+          <table className="w-full text-left border-collapse min-w-[600px]">
+            <thead>
+              <tr className="text-neutral-500 text-xs font-bold uppercase tracking-wider border-b border-neutral-900 pb-3">
+                <th className="pb-3 font-semibold">Order ID</th>
+                <th className="pb-3 font-semibold">Customer Name</th>
+                <th className="pb-3 font-semibold">Purchase Date</th>
+                <th className="pb-3 font-semibold">Status Badge</th>
+                <th className="pb-3 text-right font-semibold">Total Amount</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-neutral-900/40">
+              {orders.map((order: OrderRecord) => {
+                const standardizedStatus = order.status.toLowerCase();
+                return (
+                  <tr
+                    key={order.id}
+                    className="group text-sm hover:bg-neutral-900/20 transition-colors duration-150 cursor-pointer"
+                  >
+                    <td className="py-4 font-mono text-neutral-400 font-semibold group-hover:text-neutral-200 transition-colors">
+                      #{order.id.slice(-4).toUpperCase()}
+                    </td>
+                    <td className="py-4 text-neutral-300 font-medium max-w-40 truncate">
+                      {order.customer?.name || "Anonymous Guest"}
+                    </td>
+                    <td className="py-4 text-neutral-400 font-medium">
+                      {dateFormatter.format(new Date(order.createdAt))}
+                    </td>
+                    <td className="py-4">
+                      <span className={`px-2.5 py-1 border rounded-full text-[11px] font-bold tracking-wide uppercase shadow-sm ${
+                        statusStyles[standardizedStatus] || "bg-neutral-900 text-neutral-400 border-neutral-800"
+                      }`}>
+                        {order.status}
+                      </span>
+                    </td>
+                    <td className="py-4 text-right font-semibold text-neutral-200 tabular-nums">
+                      {currencyFormatter.format(order.totalAmount)}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div className="flex gap-2 text-indigo-400 hover:text-indigo-300 transition-colors font-bold text-xs uppercase tracking-wider items-center justify-center mt-6 pt-4 border-t border-neutral-900/60 cursor-pointer group w-full sm:w-auto mx-auto">
+        <span>View all records</span>
+        <MoveRight size={14} className="transform group-hover:translate-x-1 transition-transform" />
+      </div>
     </div>
+  );
+};
 
-  )
-}
-
-export default OrdersTable
+export default OrdersTable;
