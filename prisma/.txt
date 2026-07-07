@@ -1,0 +1,52 @@
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String?
+  createdAt DateTime @default(now())
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  address   String?
+  orders    Order[]
+  status    String
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id        String      @id @default(cuid())
+  name      String
+  price     Float
+  stock     Int
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  customerId  String
+  customer    Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  totalAmount Float
+  status      String
+  items       OrderItem[]
+  createdAt   DateTime    @default(now())
+
+  @@index([customerId])
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Float
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([productId])
+}
